@@ -12,7 +12,7 @@ RowLayout{
         id: connectionSelector
 
         property string connected_still: ""
-        onCurrentTextChanged: { connectionSelector.selected_still = (currentIndex > 0)? currentText : "";}
+        onCurrentTextChanged: { connectionSelector.connected_still = (currentIndex > 0)? currentText : "";}
 
         implicitHeight: 26
         implicitWidth: 180

@@ -5,7 +5,7 @@ var system_page_baseurl = "qrc:/BsiSystemPages/";
 var system_default_page_file = "Bsp_Title.qml";
 
 function page_file_from_name(page_name) {
-    still = status_banner.selected_still;
+    let still = status_banner.selected_still;
     if (!still) return "";
     return "Bdp" + still + "_" + page_name + ".qml";
 }

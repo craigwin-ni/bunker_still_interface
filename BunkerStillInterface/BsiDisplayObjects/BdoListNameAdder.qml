@@ -69,7 +69,7 @@ Row {
             font.pointSize: 10
 
             onClicked: {
-                connectionAdder.acceptNewListName();
+                listNameAdder.acceptNewListName();
             }
         }
 
@@ -78,7 +78,7 @@ Row {
             implicitHeight: 18
             font.pointSize: 10
             onClicked: {
-                connectionAdder.rejectNewList();
+                listNameAdder.rejectNewList();
             }
         }
     }

@@ -9,6 +9,11 @@ Column {
         Component.onCompleted: {displayUnitModel.loadDisplayUnits();}
     }
 
+    Component {
+        id: displayUnitDelegate
+        BdoDisplayUnitDelegate {}
+    }
+
     ListView {
         id: pageListView
 
@@ -20,11 +25,11 @@ Column {
         clip: true
         currentIndex: -1
         model: displayUnitModel
-        delegate: BdoDisplayUnitDelegate
+        delegate: displayUnitDelegate
     }
 
     BdoListNameAdder {
-        listModel: pageModel
+        listModel: displayUnitModel
         addButtonText: "Add Display Unit"
         blankListEntry: ({
                 "name": "",

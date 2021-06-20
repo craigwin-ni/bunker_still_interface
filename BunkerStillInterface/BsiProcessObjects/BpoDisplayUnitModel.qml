@@ -35,9 +35,8 @@ ListModel {
 
     function get_du_list() {
         var du_list = [];
-        let du_count = du_folder.count;
-        for (let i_page=0; i_page<page_count; i_page++) {
-            let basename = du_folder.get(i_page, "fileBaseName");
+        for (let i_du=0; i_du<du_folder.count; i_du++) {
+            let basename = du_folder.get(i_du, "fileBaseName");
             du_list.push(basename.substring(basename.indexOf("_")+1));
         }
         return du_list;
@@ -47,8 +46,7 @@ ListModel {
         var page_list = [];
         var still = status_banner.connected_still;
         page_folder.nameFilters = [Putiljs.page_file_from_name("*")];
-        let page_count = page_folder.count;
-        for (let i_page=0; i_page<page_count; i_page++) {
+        for (let i_page=0; i_page<page_folder.count; i_page++) {
             page_list.push(Peditjs.display_unit_name_from_file(page_folder.get(i_page, "fileName")));
         }
         return page_list;
@@ -88,7 +86,7 @@ ListModel {
             log.addMessage("DisplayUnitModel.addElement: reject duplicate name '" + jsobject.name + "'")
             return;
         }
-        displayunits[jsobject.name] = jsobject.display_unit;
+        display_units[jsobject.name] = jsobject.display_unit;
         append(jsobject);
     }
 

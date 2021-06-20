@@ -1,0 +1,16 @@
+import QtQuick 2.0
+
+ListModel {
+    id: pageListModel
+
+    property string connectionFile: "BSI/connections.json"
+
+    signal connectionsChanged(string name)
+
+    property var jsonIo: BpoJsonIo {
+        id: jsonIo
+        onJsonErrorChanged: {
+            log.addMessage("Connections: " + jsonIo.jsonErrorMsg);
+        }
+    }
+}

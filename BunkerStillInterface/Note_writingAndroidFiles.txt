@@ -1,0 +1,20 @@
+Requirements for Reading Files on Android
+
+To be able to read files with another app on Android, please make sure that the following 2 conditions are met:
+
+    You need to enable the paths you wish to use in android/res/xml/file_paths.xml. If this file does not exist yet, please create it. The default content is:
+
+     <?xml version="1.0" encoding="utf-8"?>
+     <paths>
+     <files-path name="files" path="."/>
+     <cache-path name="cache" path="."/>
+     <external-path name="external" path="."/>
+     </paths>
+
+    You need to specify a file provider in android/AndroidManifest.xml. You can add the following code just before the closing </application> tag (so it is a child of the <application>):
+
+     <provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.fileprovider" android:exported="false" android:grantUriPermissions="true">
+       <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"/>
+     </provider>
+
+

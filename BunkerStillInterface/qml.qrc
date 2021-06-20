@@ -1,0 +1,32 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>BsiBanner.qml</file>
+        <file>BsiGlobal.qml</file>
+        <file>BsiLog.qml</file>
+        <file>BsiPager.qml</file>
+        <file>BsiDisplayObjects/BdoButton.qml</file>
+        <file>BsiDisplayObjects/BdoComponentSelector.qml</file>
+        <file>BsiDisplayObjects/BdoConnectionSelector.qml</file>
+        <file>BsiDisplayObjects/BdoLed.qml</file>
+        <file>BsiDisplayObjects/BdoPageSelector.qml</file>
+        <file>BsiDisplayObjects/BdoTextBulk.qml</file>
+        <file>BsiDisplayObjects/BdoTextField.qml</file>
+        <file>BsiSystemPages/Bsp_Edit_Connections.qml</file>
+        <file>BsiSystemPages/Bsp_Title.qml</file>
+        <file>images/BunkerLogo.png</file>
+        <file>images/BunkerStillsLogo.png</file>
+        <file>javascript/page_creator.js</file>
+        <file>BsiSystemPages/Bsp_Edit_Pages.qml</file>
+        <file>BsiDisplayObjects/BdoListNameAdder.qml</file>
+        <file>BsiProcessObjects/BpoJsonIo.qml</file>
+        <file>BsiProcessObjects/BpoDisplayUnitModel.qml</file>
+        <file>BsiProcessObjects/BpoConnectionModel.qml</file>
+        <file>BsiProcessObjects/BpoMqttClient.qml</file>
+        <file>BsiProcessObjects/BpoComponentStore.qml</file>
+        <file>BsiDisplayObjects/BdoDisplayUnitDelegate.qml</file>
+        <file>BsiDisplayObjects/BdoConnectionDelegate.qml</file>
+        <file>javascript/page_editor.js</file>
+        <file>javascript/page_util.js</file>
+    </qresource>
+</RCC>

@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import Qt.labs.folderlistmodel 2.15
+import Bunker 1.0
 
 import "../javascript/page_util.js" as Putiljs
 
@@ -18,12 +19,11 @@ ComboBox {
         showDirs: false
         showOnlyReadable: true
         sortField: FolderListModel.Name
-        nameFilters: ["None"]
+        nameFilters: ["NoFileMatchesThis"]  // filter is set when a still is selected
     }
 
     Component.onCompleted: {
         load_selector_choices();
-        requested_page = editText;
     }
 
     onActivated: {
@@ -31,8 +31,16 @@ ComboBox {
     }
 
     onRequested_pageChanged: {
-        if (!requested_page) return;  // Allow to clear without processing
+        if (!requested_page || requested_page === "") return;  // Allow to clear without processing
         let list = get_page_list();
+
+        if (Putiljs.is_private_page(requested_page)) {
+            current_page = requested_page;
+            current_page_file = [Putiljs.system_page_url_from_name(current_page),
+                                 null]
+            return;
+        }
+
         let index = list.indexOf(requested_page);
         if (index < 0) {
             requested_page = "";  // Clear
@@ -45,12 +53,12 @@ ComboBox {
         index -= 1;  // Skip "Page" so that index matches index of page_folder contents.
         if (index < 0) {
             // the null "Page" selection
-            current_page_file = [Putiljs.system_page_baseurl + Putiljs.system_default_page_file,
+            current_page_file = [Putiljs.system_default_page_url,
                                  null];
 
         } else if (index >= page_folder.count) {
             // one of the system pages
-            current_page_file = [Putiljs.system_page_baseurl + Putiljs.system_page_file_from_name(current_page),
+            current_page_file = [Putiljs.system_page_url_from_name(current_page),
                                  null];
 
         } else {
@@ -69,6 +77,7 @@ ComboBox {
         }
         page_list.push("Edit Connections");
         page_list.push("Edit Pages");
+        page_list.push("Show Files");
         return page_list;
     }
 
@@ -76,12 +85,11 @@ ComboBox {
         let list = get_page_list();
         let index = list.indexOf(current_page);
         model = list
-        console.log("page_list: "+list+", index: "+index+", current pg: "+current_page);
         if (index < 0) {
             // The current page is no longer in the page folder
             currentIndex = 0;
             current_page = editText;
-            current_page_file = [Putiljs.system_page_baseurl + Putiljs.system_default_page_file,
+            current_page_file = [Putiljs.system_default_page_url,
                                  null];
         } else {
             currentIndex = index;
@@ -103,7 +111,7 @@ ComboBox {
     font.pointSize: 11
     font.family: "Arial"
     background: Rectangle {
-        color: pageSelector.currentIndex===0? "lightgray" : global.textBgColor
+        color: pageSelector.currentIndex===0? "lightgray" : Globals.textBgColor
         border.width: 2
         border.color: "grey"
         radius: 5
@@ -123,6 +131,8 @@ ComboBox {
         function onConnected_stillChanged() {
             page_folder.nameFilters = [Putiljs.page_file_from_name("*")]
             load_selector_choices();
+            console.log("page_folder: folder " + page_folder.folder);
+            console.log("page_folder: filter " + page_folder.nameFilters + ", count " + page_folder.count);
         }
     }
 }

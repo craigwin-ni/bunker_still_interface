@@ -61,7 +61,10 @@ ListModel {
 
     function loadConnections() {
         let connections = jsonIo.loadJson(connectionFile);
-        if (jsonIo.jsonError) return;
+        if (jsonIo.jsonError) {
+            log.addMessage("(E) Connection file:" + jsonIo.jsonErrorMsg);
+            return;
+        }
 
         connectionModel.clear();
         for (let name of Object.keys(connections)) {

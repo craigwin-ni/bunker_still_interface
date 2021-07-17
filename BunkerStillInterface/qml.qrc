@@ -2,10 +2,9 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>BsiBanner.qml</file>
-        <file>BsiGlobal.qml</file>
         <file>BsiLog.qml</file>
         <file>BsiPager.qml</file>
-        <file>BsiDisplayObjects/BdoButton.qml</file>
+        <file>BsiDisplayObjects/BdoButton_Text.qml</file>
         <file>BsiDisplayObjects/BdoComponentSelector.qml</file>
         <file>BsiDisplayObjects/BdoConnectionSelector.qml</file>
         <file>BsiDisplayObjects/BdoLed.qml</file>
@@ -20,13 +19,33 @@
         <file>BsiSystemPages/Bsp_Edit_Pages.qml</file>
         <file>BsiDisplayObjects/BdoListNameAdder.qml</file>
         <file>BsiProcessObjects/BpoJsonIo.qml</file>
-        <file>BsiProcessObjects/BpoDisplayUnitModel.qml</file>
+        <file>BsiProcessObjects/BpoPageUnitModel.qml</file>
         <file>BsiProcessObjects/BpoConnectionModel.qml</file>
         <file>BsiProcessObjects/BpoMqttClient.qml</file>
         <file>BsiProcessObjects/BpoComponentStore.qml</file>
-        <file>BsiDisplayObjects/BdoDisplayUnitDelegate.qml</file>
+        <file>BsiDisplayObjects/BdoPageUnitDelegate.qml</file>
         <file>BsiDisplayObjects/BdoConnectionDelegate.qml</file>
         <file>javascript/page_editor.js</file>
         <file>javascript/page_util.js</file>
+        <file>imports/Bunker/Globals.qml</file>
+        <file>imports/Bunker/qmldir</file>
+        <file>BsiBaseUnits/Bbu_DataAsText.qml</file>
+        <file>BsiSystemPages/Bsp_Show_Files.qml</file>
+        <file>BsiBaseUnits/BbuIndex.qml</file>
+        <file>BsiBaseUnits/Bbu_Row.qml</file>
+        <file>BsiDisplayObjects/BdoButton_Letter.qml</file>
+        <file>BsiDisplayObjects/BdoButton_Symbol.qml</file>
+        <file>BsiDisplayObjects/BdoButton_Delete.qml</file>
+        <file>BsiSystemPages/Bpp_PageUnitEditor.qml</file>
+        <file>BsiProcessObjects/BpoPuAssignmentListModel.qml</file>
+        <file>BsiProcessObjects/BpoPuChildListModel.qml</file>
+        <file>BsiDisplayObjects/BdoPuAssignmentDelegate.qml</file>
+        <file>BsiDisplayObjects/BdoPuChildDelegate.qml</file>
+        <file>BsiDisplayObjects/BdoPuAssignments.qml</file>
+        <file>BsiDisplayObjects/BdoTextLabeledField.qml</file>
+        <file>BsiDisplayObjects/BdoButton_ShowHide.qml</file>
+        <file>BsiDisplayObjects/BdoButton_MoveUpDown.qml</file>
+        <file>BsiDisplayObjects/BdoDialog_Verify.qml</file>
+        <file>BsiSystemPages/Bpp_PageGenerator.qml</file>
     </qresource>
 </RCC>

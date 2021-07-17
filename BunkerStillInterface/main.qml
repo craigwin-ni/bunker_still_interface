@@ -2,7 +2,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
-
+import Bunker 1.0
 import "BsiProcessObjects"
 
 Window {
@@ -17,7 +17,6 @@ Window {
         connectionModel.loadConnections();
     }
 
-    BsiGlobal {id: global}
     BpoConnectionModel {id: connectionModel}
     BpoMqttClient {id: mqtt}
     BpoComponentStore {id: componentStore}
@@ -45,7 +44,7 @@ Window {
                 if (height === SplitView.minimumHeight) log.scroll_to_bottom();
             }
 
-            width: parent.width
+            implicitWidth: parent.width
             height: 35
             SplitView.minimumHeight: 35
             text: "Log messages"

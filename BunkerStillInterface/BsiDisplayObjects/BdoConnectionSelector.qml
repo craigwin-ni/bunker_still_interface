@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Extras 1.4
+import Bunker 1.0
 
 RowLayout{
     property alias connected_still: connectionSelector.connected_still
@@ -20,7 +21,7 @@ RowLayout{
         font.pointSize: 11
         font.family: "Arial"
         background: Rectangle {
-            color: connectionSelector.currentIndex==0? "lightgray" : global.textBgColor
+            color: connectionSelector.currentIndex==0? "lightgray" : Globals.textBgColor
             border.width: 2
             border.color: "grey"
             radius: 5

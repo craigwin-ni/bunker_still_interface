@@ -11,39 +11,61 @@ QtObject {
 
         onErrorChanged: {
             jsonErrorMsg = jsonfile.error_msg(errnum);
-            jsonError = 1;
         }
     }
 
     function storeJson(path, object) {
         jsonError = 0;
         jsonfile.set_path(path);
+        var e;
         var text;
-        try{
-                text = JSON.stringify(object);
+        try {
+            text = JSON.stringify(object, 0, 2);
         } catch (e) {
-            jsonErrorMsg = "Json object data type error: " + e.message +
-                    " for '" + path + "'.";
+            jsonErrorMsg = "Json data type: '" + path + "' @" +
+                    e.lineNumber + ":" + e.comumnNumber + " " + e.message;
             jsonError = 3;
             return;
         }
 
         jsonfile.write(text);
+        if (jsonfile.error) {
+            jsonErrorMsg = "Json write: " + jsonErrorMsg;
+            jsonError = 1;
+            return;
+        }
     }
 
     function loadJson(path) {
         var object;
+        var e;
         jsonError = 0;
         jsonfile.set_path(path);
         let text = jsonfile.read();
+        if (jsonfile.error) {
+            jsonErrorMsg = "Json read: " + jsonErrorMsg;
+            jsonError = 1;
+            return;
+        }
+
         try {
             object = JSON.parse(text);
         } catch(e) {
             // Report parse errors.
-            jsonErrorMsg = "Json syntax error: " + e.message +
-                    " at " + e.lineNumber + ":" + e.comumnNumber + " in '" + path + "'.";
+            jsonErrorMsg = "Json parse '" + path + "' @" +
+                    e.lineNumber + ":" + e.comumnNumber + " " + e.message;
             jsonError = 2;
+            return;
         }
         return object;
+    }
+
+    function removeJson(path) {
+        jsonError = 0;
+        jsonfile.set_path(path);
+        if (!jsonfile.remove()) {
+            jsonErrorMsg = "Json could not remove file " + path;
+            jsonError = 4;
+        }
     }
 }

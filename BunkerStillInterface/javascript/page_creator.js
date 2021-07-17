@@ -10,7 +10,7 @@ function createPageObject(entry, displayed_page) {
 
     let error = page_component.errorString();
     if (error) {
-        console.log("page_component error: " + error);
+        log.addMessage("(E) Peditjs.createPageObject: page_component error: " + error);
     }
 
     if (page_component.status === Component.Ready) {
@@ -22,7 +22,6 @@ function createPageObject(entry, displayed_page) {
 }
 
 function finishPageCreation() {
-    console.log("finishPageCreation for "+page_entry.file);
     let page = page_component.createObject(page_display, {visible: false});
     if (page === null) {
         log.addMessage("Error creating page from " + page_file);

@@ -8,7 +8,9 @@ BdoTextBulk {
 
     property date dttm: new Date()
     property var locale: Qt.locale()
-    property int char_limit: 5000
+    property int char_limit: 10000
+
+    text_width: parent.width
 
     function addMessage(msg)
     {

@@ -23,6 +23,7 @@ public:
     Q_INVOKABLE QString read();
     Q_INVOKABLE int write(QString text);
     Q_INVOKABLE QString error_msg(int errnum);
+    Q_INVOKABLE bool remove();
 
     Q_INVOKABLE QString path() {return m_path;}
     Q_INVOKABLE int error() {return m_error;}

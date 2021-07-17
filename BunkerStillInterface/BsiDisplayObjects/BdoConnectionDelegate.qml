@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
+import Bunker 1.0
 
 Item {
     id: delegateItem
@@ -29,7 +30,7 @@ Item {
         width: connectionView.width
         color: "lightpink"
         radius: 5
-        border.color: global.bulkTextBorderColor
+        border.color: Globals.bulkTextBorderColor
         border.width: 1
 
         Connections {  // Note: QML 'Connections' type is unrelated to Bsi MQTT connections.
@@ -60,7 +61,7 @@ Item {
 
         Row {
             spacing: 2
-            BdoButton {
+            BdoButton_Text {
                 id: editButton
                 text: "Edit"
                 implicitHeight: 15
@@ -79,10 +80,10 @@ Item {
                     cancelButton.visible = true;
                     addressValue.focus = true;
 
-                    connectionModel.storeConnections();  // XXX Why?
+//                    connectionModel.storeConnections();  // Why was this here?
                 }
             }
-            BdoButton {
+            BdoButton_Text {
                 id: removeButton
                 text: "Remove"
                 implicitHeight: 15
@@ -97,7 +98,7 @@ Item {
                     cancelRemoveButton.visible = true;
                 }
             }
-            BdoButton {
+            BdoButton_Text {
                 id: confirmButton
                 text: "Confirm"
                 implicitHeight: 15
@@ -117,7 +118,7 @@ Item {
                     removeButton.visible = true;
                 }
             }
-            BdoButton {
+            BdoButton_Text {
                 id: cancelRemoveButton
                 text: "Cancel"
                 implicitHeight: 15
@@ -179,7 +180,7 @@ Item {
                 passwordValue.focus = false;
             }
 
-            BdoButton {
+            BdoButton_Text {
                 id: okButton
                 text: "OK"
                 implicitHeight: 15
@@ -191,7 +192,7 @@ Item {
                     editDisposition.acceptEdit();
                 }
             }
-            BdoButton {
+            BdoButton_Text {
                 id: cancelButton
                 text: "Cancel"
                 implicitHeight: 15

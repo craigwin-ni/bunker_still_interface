@@ -1,5 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import Bunker 1.0
 
 import "javascript/page_creator.js" as PageCreator
 
@@ -9,16 +11,22 @@ Rectangle {
     property string displayed_page: ""
     property var pages: ({})
 
-    color: global.mainBgColor
-    border.color: global.bulkTextBorderColor
+    // pager stores page units for page editor
+    // to make it available to sub-pages of editor.
+    property string page_unit_name: ""
+    property var page_unit_model: null
+
+    color: Globals.mainBgColor
+    border.color: Globals.bulkTextBorderColor
     border.width: 2
 
     ScrollView {
         clip: true
         anchors.fill: parent
-        objectName: "pager-scrollveiw"
+        objectName: "pager-scrollview"
+        padding: 2
 
-        Item {
+        RowLayout {
             id: page_display
             objectName: "pager-item"
             // Pages added here so that ScrollView has only one child
@@ -28,7 +36,7 @@ Rectangle {
     Connections {
         target: status_banner
         function onCurrent_page_fileChanged() {
-            console.log("Pager sees new page '"+status_banner.current_page_file[0]+"'");
+            log.addMessage("Pager loading '"+status_banner.current_page_file[0]+"'");
             let page_file = status_banner.current_page_file[0];
             let page_timestamp = status_banner.current_page_file[1];
             if (!page_file) return;
@@ -45,7 +53,6 @@ Rectangle {
                     page_entry.page = null;
                 }
 
-                console.log("page entry: "+JSON.stringify(page_entry));
                 let prior_page = displayed_page? pages[displayed_page].page : null;
                 PageCreator.createPageObject(page_entry, prior_page);
             } else {

@@ -45,6 +45,11 @@ int QmlTextFile::write(QString text)
     return check_error(&file, &stream);
 }
 
+bool QmlTextFile::remove() {
+    QFile file(m_path);
+    return file.remove();
+}
+
 bool QmlTextFile::check_error(QFile *file, QTextStream *stream) {
 
     if (file->error()) {
@@ -66,6 +71,7 @@ bool QmlTextFile::check_error(QFile *file, QTextStream *stream) {
 QString QmlTextFile::error_msg(int errnum)
 {
     QString msg;
+    char msg_buffer[150];
 
     switch(errnum) {
     case (0): return "";
@@ -86,9 +92,11 @@ QString QmlTextFile::error_msg(int errnum)
     case (12): msg = "The file could not be resized."; break;
     case (13): msg = "The file could not be accessed."; break;
     case (14): msg = "The file could not be copied."; break;
+    default:
+        sprintf(msg_buffer, "Unknown error number: %d", errnum);
+        msg = msg_buffer;
+        break;
     }
-
-    msg = "Unknown error number.";
 
     return QString("File error on '") + m_path + QString("': ") + msg;
 }

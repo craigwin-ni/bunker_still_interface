@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import "./BsiDisplayObjects"
+import Bunker 1.0
 
 Rectangle {
     id: banner
@@ -11,8 +12,8 @@ Rectangle {
     readonly property alias current_page_file: pageSelector.current_page_file
 
     implicitHeight: 54
-    color: global.mainBgColor
-    border.color: global.bulkTextBorderColor
+    color: Globals.mainBgColor
+    border.color: Globals.bulkTextBorderColor
     border.width: 2
 
     Row {

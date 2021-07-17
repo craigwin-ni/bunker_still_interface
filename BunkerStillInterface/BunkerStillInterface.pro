@@ -15,8 +15,11 @@ HEADERS += \
 
 RESOURCES += qml.qrc
 
+## Additional import path used to resolve QML modules in Qt Creator's code model
+#QML_IMPORT_PATH = ./BsiDisplayObjects ./BsiProcessObjects ./BsiSystemPages
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH = ./BsiDisplayObjects ./BsiProcessObjects ./BsiSystemPages
+QML_IMPORT_PATH = $$PWD/imports
+QML2_IMPORT_PATH = $$PWD/imports
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =

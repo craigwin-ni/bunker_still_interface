@@ -3,37 +3,47 @@ import QtQuick 2.0
 Row {
     id: listNameAdder
 
-    property var listModel
+    property var listModel: null
     property var blankListEntry: ({"name": null})
     property string addButtonText: "Add Name"
+    property var newElement: null
 
-    function acceptNewListName() {
-        addButton.visible = true;
+    function continueAdd() {
         addNameInfo.visible = false;
         newListName.focus = false;
-
         let name = newListName.text.trim();
-        if (!name) return;
-        let new_element = JSON.parse(JSON.stringify(blankListEntry));
-        new_element.name = name;
-        listModel.addElement(new_element);
+        if (!name) {
+            addButton.visible = true;
+            return;
+        }
+        blankListEntry.name = name;
+        newElement = blankListEntry;  // change signals parent of element readiness
+
+        if (listModel) {
+            finishAdd(listModel, newElement);
+        }
     }
 
-    function rejectNewList() {
+    function finishAdd(theModel, element) {
+        theModel.addElement(element);
+        addButton.visible = true;
+    }
+
+    function rejectAdd() {
         addButton.visible = true;
         addNameInfo.visible = false;
     }
 
     Keys.onReturnPressed: {
-        acceptNewListName();
+        continueAdd();
         event.accepted = true;
     }
     Keys.onEscapePressed: {
-        rejectNewList()
+        rejectAdd()
         event.accepted = true;
     }
 
-    BdoButton {
+    BdoButton_Text {
         id: addButton
         text: addButtonText;
         implicitHeight: 20
@@ -63,22 +73,22 @@ Row {
             implicitWidth: 100
         }
 
-        BdoButton {
+        BdoButton_Text {
             text: "Continue"
             implicitHeight: 18
             font.pointSize: 10
 
             onClicked: {
-                listNameAdder.acceptNewListName();
+                listNameAdder.continueAdd();
             }
         }
 
-        BdoButton {
+        BdoButton_Text {
             text: "Cancel"
             implicitHeight: 18
             font.pointSize: 10
             onClicked: {
-                listNameAdder.rejectNewList();
+                listNameAdder.rejectAdd();
             }
         }
     }

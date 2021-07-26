@@ -5,10 +5,24 @@ const system_page_baseurl = "qrc:/BsiSystemPages/";
 const system_default_page_file = "Bsp_Title.qml";
 const system_default_page_url = system_page_baseurl + system_default_page_file;
 
-function page_file_from_name(page_name) {
+function page_basename_from_name(page_name) {
     let still = status_banner.connected_still;
-    if (!still) return "";
-    return "Bdp" + still + "_" + page_name + ".qml";
+    if (!still && page_name !== "*") {
+        log.addMessage("(E) Cannot address page file '" + page_name + "': still connection has not been made.")
+        return "";
+    }
+    return "Bdp" + still + "_" + page_name;
+}
+
+function page_file_from_name(page_name) {
+    let basename = page_basename_from_name(page_name);
+    return basename  + ".qml";
+}
+
+function page_path_from_name(page_name) {
+    let file = page_file_from_name(page_name);
+    if (!file) return ""
+    return page_basepath + file;
 }
 
 function page_name_from_file(page_file) {

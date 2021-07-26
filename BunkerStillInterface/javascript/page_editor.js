@@ -1,9 +1,15 @@
 
+Qt.include("name_util.js");
+
 var base_unit_baseurl = "qrc:///BsiBaseUnits/";
 var base_unit_basepath = "BsiBaseUnits/";
 
+function base_unit_component_from_name(bu_name) {
+    return "Bbu_" + bu_name;
+}
+
 function base_unit_file_from_name(bu_name) {
-    return "Bbu_" + bu_name + ".json";
+    return "Bbu_" + bu_name + ".qml";
 }
 
 function base_unit_url_from_name(bu_name) {
@@ -63,38 +69,29 @@ function blank_page_unit() {
             };
 }
 
-var name_re = RegExp("^[a-zA-Z_][a-zA-Z_0-9]*$");
-function validate_name(name) {
-    return name_re.test(name);
-}
-
-var stand_in_re = RegExp("^<[a-zA-Z_][a-zA-Z_0-9]*>$");
-function is_stand_in(s) {
-    return stand_in_re.test(s);
-}
-
-function updatePageUnitStandins(page_unit, deep, recursive) {
+function updatePageUnitStandins(page_unit, deep) {
     // Note: This will modify the argument page unit.
-    //       It will update the pageUnitModel if this is a recursive call,
-    //       but the initial call is working on an edited page_unit so we
-    //       do not store that until the edit is saved.
+    //       It will update the pageUnitModel if the standins are modified.
 
-    if (!page_unit) return;
+    let modified = false;
+
+    if (!page_unit) return modified;
 
     let pu_model = pager.page_unit_model;
-    if (pu_model.base_units[page_unit_name]) return;  // skip base units
+    if (pu_model.base_units[page_unit_name]) return modified;  // skip base units
 
     if (deep) {
         let base_unit = pu_model.get_base_unit(page_unit.base_unit_name);
         if (!base_unit) {
-            log.addMessage("(C) updatePageUnitStandins: cannot find base_unit '" + base_unit_name);
+            log.addMessage("(C) updatePageUnitStandins: cannot find base_unit '" + page_unit.base_unit_name);
         }
-        mergeStandins(page_unit.datas, base_unit.datas);
-        mergeStandins(page_unit.props, base_unit.props);
+        let extracted = extractStandins(base_unit);
+        modified = mergeStandins(page_unit.datas, extracted.datas) || modified;
+        modified = mergeStandins(page_unit.props, extracted.props) || modified;
     }
 
     let childs = page_unit.childs;
-    if (!childs) return;
+    if (!childs) return modified;
 
     var i_child, child_name, child_unit;
     if (deep) {
@@ -106,7 +103,7 @@ function updatePageUnitStandins(page_unit, deep, recursive) {
                                + childs[i_child].unit_name);
                 continue;
             }
-            updatePageUnitStandins(child_unit, deep, true);
+            updatePageUnitStandins(child_unit, deep);
         }
     }
 
@@ -120,12 +117,14 @@ function updatePageUnitStandins(page_unit, deep, recursive) {
             continue;
         }
         let extracted = extractStandins(child_unit);
-        mergeStandins(child_unit.datas, extracted.datas);
-        mergeStandins(child_unit.props, extracted.props);
+        modified = mergeStandins(child_unit.datas, extracted.datas) || modified;
+        modified = mergeStandins(child_unit.props, extracted.props) || modified;
     }
-    if (recursive) {
+    if (modified) {
         pu_model.put_page_unit(page_unit);
     }
+
+    return modified;
 }
 
 function extractStandins(page_unit) {
@@ -133,49 +132,51 @@ function extractStandins(page_unit) {
     // Return {"datas": [<datas standins>], "props": [<props tuples: standin, example value>]}
     let extracted = {"datas": [], "props": []};
 
-    let datas_set = new Set();
+    let datas_dict = {};
     let props_dict = {};
 
     var i_datas, i_props, i_child;
+    var candidate;
     let datas = page_unit.datas;
     let props = page_unit.props;
     let childs = page_unit.childs;
-    for (i_datas=0; i_datas<datas.length; i_datas++) {
-        datas_set.add(datas[i_datas][1]);
-    }
-    for (i_props=0; i_props<props.length; i_props++) {
-        if (props_dict[props[i_props][1]] === undefined) {
-            props_dict[props[i_props][1]] = props[i_props].slice(1,3);
-        }
-    }
+
+    _extract_standins(datas, datas_dict);
+    _extract_standins(props, props_dict);
+
     if (childs) {
         for (i_child=0; i_child<childs.length; i_child++) {
-            datas = page_unit.childs[i_child].datas;
-            props = page_unit.props;
-            for (i_datas=0; i_datas<datas.length; i_datas++) {
-                datas_set.add(datas[i_datas][1]);
-            }
-            for (i_props=0; i_props<props.length; i_props++) {
-                let candidate = props[i_props[1]];
-                if (is_stand_in(candidate)) {
-                    if (props_dict[candidate] === undefined) {
-                        props_dict[candidate] = props[i_props].slice(1,3);
-                    }
-                }
-            }
+            datas = childs[i_child].datas;
+            props = childs[i_child].props;
+            _extract_standins(datas, datas_dict);
+            _extract_standins(props, props_dict);
         }
     }
 
-    datas = Array.from(datas_set);
-    datas.sort();
-    extracted.datas = datas.map(d=>{return [d, d]});
+    datas = Object.values(datas_dict);
+    datas.sort((a,b)=>{return a[0]>b[0]?1:-1;});
+    datas.map(p=>{p.unshift(p[0]); return p;});
 
     props = Object.values(props_dict);
     props.sort((a,b)=>{return a[0]>b[0]?1:-1;});
-    props.map(p=>{return p.unshift(p[0])});
-    extracted.props = props;
-//    console.log("Extracted from " + page_unit.name + ":\n" + JSON.stringify(extracted, 0, 2));
+    props.map(p=>{p.unshift(p[0]); return p;});
+
+    extracted = {"datas": datas, "props": props};
+
     return extracted;
+}
+
+function _extract_standins(assignments, assignments_dict) {
+    // assignments is a datas or props member
+    var i_assignment
+    for (i_assignment=0; i_assignment<assignments.length; i_assignment++) {
+        let candidate = assignments[i_assignment][1];
+        if (is_stand_in(candidate)) {
+            if (assignments_dict[candidate] === undefined) {
+                assignments_dict[candidate] = assignments[i_assignment].slice(1,3);
+            }
+        }
+    }
 }
 
 function mergeStandins(standins, new_standins) {
@@ -185,6 +186,7 @@ function mergeStandins(standins, new_standins) {
     var standin, new_standin;
     var added_standins = [];
     var i_list;
+    let modified = false;
 
     // eliminate outdated standins: those not in new_standins.
     for (i_list=standins.length-1; i_list>=0; i_list--) {
@@ -198,6 +200,7 @@ function mergeStandins(standins, new_standins) {
         }
         if (!keep) {
             standins.splice(i_list, 1);
+            modified = true;
         }
     }
 
@@ -218,7 +221,10 @@ function mergeStandins(standins, new_standins) {
     if (added_standins.length) {
         for (i_list=0; i_list<added_standins.length; i_list++) standins.push(added_standins[i_list]);
         standins.sort((a, b) => {return a[0]>b[0]? 1: -1;});
+        modified = true;
     }
+
+    return modified;
 }
 
 function add_page_unit_child(page_unit, child_unit_name) {
@@ -249,12 +255,156 @@ function add_page_unit_child(page_unit, child_unit_name) {
     return new_child;
 }
 
-function pagegen_resolve(page_unit_name, resolution) {
-    console.log("pagegen_resolve: resolving page '" + page_unit_name + "'");
-    return {};
+function pagegen(page_unit, resolution, page_name) {
+    let page_text = "";
+    let page_unit_model = pager.page_unit_model;
+    if (!page_name) page_name = page_unit_name;
+    console.log("pagegen: generating page '" + page_name + "'");
+
+    // Check for complete resolution
+    var i_resolution;
+    let errors = 0;
+    for (let section of ["datas", "props"]) {
+        for (i_resolution=0; i_resolution<resolution[section].length; i_resolution++) {
+            if (is_stand_in(resolution[section][i_resolution][1])) {
+                log.addMessage("(E) Standin '" + resolution[section][i_resolution][0]
+                               + "' is not resolved.");
+                errors += 1;
+            }
+        }
+    }
+    if (errors) return page_text;
+
+    // Generate top of QML file.
+    page_text = (" " + qml_file_head).slice(1);
+    page_text += "Item {\n";
+
+    // Generate global Data connections
+//    page_text += generate_global_connections(resolution.datas, 2);
+
+    // Recursively generate page contents
+    page_text += generate_unit(page_unit, resolution, 2);
+
+    // Generate bottom of QML file.
+    page_text += "}\n\n// End of generated QML\n";
+
+    return page_text;
 }
 
-function pagegen_generate(page_unit_name, resolved_units) {
-    console.log("pagegen_resolve: resolving page '" + page_unit_name + "'");
-    return "";
+//function generate_global_connections(datas, indent) {
+//    let page_text = "";
+//    // Work with uniquified version of col 2 of resolution.datas
+//    let dataset = new Set(datas.map(d=>{return d[1]}));
+
+//    var data_name;
+//    page_text += " ".repeat(indent) + "//\n";
+//    page_text += " ".repeat(indent) + "// Setup up data connections for page.\n";
+//    for (data_name of dataset) {
+//        page_text += " ".repeat(indent) + "property var " + data_name + ": null\n";
+//    }
+//    page_text += " ".repeat(indent) + "Component.onCompleted: {\n";
+//    for (data_name of dataset) {
+//        page_text += " ".repeat(indent+2) + data_name
+//                + " = componentStore.get_component(\"" + data_name + "\");\n";
+//    }
+//    page_text += " ".repeat(indent) + "}\n\n";
+//    return page_text;
+//}
+
+function generate_unit(page_unit, resolution, indent) {
+    let page_text = "";
+
+    // Resolve page_unit
+    resolve_page_unit(page_unit, resolution);
+
+    // Get a copy of base unit and resolve it uning resolved page unit.
+    let base_unit = page_unit_model.get_base_unit(page_unit.base_unit_name);
+    resolve_page_unit(base_unit, page_unit);
+
+    // Generate top of this unit.
+    page_text += " ".repeat(indent) + base_unit_component_from_name(page_unit.base_unit_name) + " {\n";
+    indent += 2;
+
+    var data, prop;
+    if (base_unit.props.length + base_unit.datas.length) {
+        page_text += "\n" + " ".repeat(indent) + "Component.onCompleted: {\n";
+        indent += 2;
+        if (base_unit.datas.length) {
+            page_text += " ".repeat(indent) + "//\n";
+            page_text += " ".repeat(indent) + "// Data assignments\n";
+            for (data of base_unit.datas) {
+                page_text += " ".repeat(indent) + data[0]
+                             + " = componentStore.get_component(\"" + data[1] + "\");\n";
+            }
+        }
+        if (base_unit.props.length) {
+            page_text += " ".repeat(indent) + "//\n";
+            page_text += " ".repeat(indent) + "// Property assignments\n";
+            for (prop of base_unit.props) {
+                if (prop[0].startsWith("S")) {
+                    page_text += " ".repeat(indent) + prop[0].slice(1) + " = \"" + prop[1] + "\";\n";
+                } else {
+                    page_text += " ".repeat(indent) + prop[0] + " = " + prop[1] + ";\n";
+                }
+            }
+        }
+        indent -= 2;
+        page_text += " ".repeat(indent) + "}\n";
+    }
+
+    // Generate each child
+    if (page_unit.childs) {
+        for (let child of page_unit.childs) {
+            page_text += "\n";
+            let child_unit = page_unit_model.get_page_unit(child.unit_name);
+            page_text += generate_unit(child_unit, child, indent);
+        }
+    }
+
+    // Generate end of this unit
+    indent -= 2;
+    page_text += " ".repeat(indent) + "}\n";
+
+    return page_text;
 }
+
+function resolve_page_unit(page_unit, resolution) {
+    // replace all column 2 standins with the resolution.
+    let datas_dict = {};
+    let props_dict = {};
+    resolution.datas.forEach((tuple)=>{datas_dict[tuple[0]] = tuple[1];});
+    resolution.props.forEach((tuple)=>{props_dict[tuple[0]] = tuple[1];});
+    var data, prop, child;
+
+    if (page_unit.name === "DataAsText") {
+        console.log("DataAsText unit resolution:");
+        console.log("... base_unit:" + JSON.stringify(page_unit,0,2));
+        console.log("... resolution:" + JSON.stringify(resolution));
+        console.log("... props dict:" + JSON.stringify(props_dict, 0, 2));
+    }
+
+    for (data of page_unit.datas) {
+        data[1] = datas_dict[data[1]] || data[1];
+    }
+    for (prop of page_unit.props) {
+        prop[1] = props_dict[prop[1]] || prop[1];
+    }
+
+    if (page_unit.childs) {
+        for (child of page_unit.childs) {
+            for (data of child.datas) {
+                data[1] = datas_dict[data[1]] || data[1];
+            }
+            for (prop of child.props) {
+                prop[1] = props_dict[prop[1]] || prop[1];
+            }
+        }
+    }
+}
+
+const qml_file_head = "// This file is generated from a page_unit.  Edits may be overwritten.\n" +
+                    "import QtQuick 2.15\n" +
+                    "import QtQuick.Controls 2.15\n" +
+                    "import \"../BsiBaseUnits\"\n" +
+                    "import \"../BsiDisplayObjects\"\n" +
+                    "import Bunker 1.0\n\n"

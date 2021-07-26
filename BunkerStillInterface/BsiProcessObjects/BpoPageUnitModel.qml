@@ -125,12 +125,18 @@ ListModel {
     function get_page_unit(unit_name) {
         let page_unit = page_units[unit_name];
         if (!page_unit) {
-            log.addMessage("(C) pageUnitModel.get_page_unit: Cannot find unit '" + unit_name + "'");
+            log.addMessage("(E) pageUnitModel.get_page_unit: Cannot find unit '" + unit_name + "'");
+            let result = Peditjs.blank_page_unit();
+            result.name = unit_name;
+            result.base_unit_name = "Undefined";
+            result.description = "This page unit does not exist.";
+            return result;
         }
         return JSON.parse(JSON.stringify(page_unit));
     }
 
     function get_base_unit(unit_name) {
+        if (unit_name === "Undefined") return Peditjs.blank_page_unit();
         let base_unit = base_units[unit_name];
         if (!base_unit) {
             log.addMessage("(C) pageUnitModel.get_base_unit: Cannot find unit '" + unit_name + "'");

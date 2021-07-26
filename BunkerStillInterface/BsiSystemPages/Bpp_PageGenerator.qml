@@ -1,9 +1,11 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import TextFile 1.0
 import "../BsiDisplayObjects"
 import "../javascript/page_editor.js" as Peditjs
+import "../javascript/page_util.js" as Putiljs
 
-Item {
+Column {
     id: page_generator
 
     property var page_unit_model
@@ -27,7 +29,46 @@ Item {
         indent: 1
         title: "Unresolved Standins"
         showHide: false
+        final_resolve: true
     }
 
+    TextFile {
+        id: pagefile
 
+        onErrorChanged: {
+            if (error) {
+                let msg = error_msg(errnum);
+                log.addMessage("(E) Error writing page file " + path + ": " + msg);
+            }
+        }
+    }
+
+    Row {
+        id: button_row
+
+        BdoButton_Text {
+            text: "Continue"
+
+            onClicked: {
+                // pagegen will check that all standins are resolved.
+                let page_name = root_unit.name;  // XXX need to accept different name
+                let page_text = Peditjs.pagegen(root_unit, unresolved, page_name);
+                if (!page_text) return;
+                // save page text in pages folder.
+                pagefile.path = Putiljs.page_path_from_name(page_name);
+                if (!pagefile.path) return;
+                pagefile.write(page_text);
+                if (pagefile.error) return;
+
+                status_banner.requested_page = "Edit Pages";
+            }
+        }
+        BdoButton_Text {
+            text: "Cancel"
+
+            onClicked: {
+                status_banner.requested_page = "Edit Pages";
+            }
+        }
+    }
 }

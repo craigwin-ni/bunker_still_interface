@@ -7,16 +7,17 @@ QtObject {
             "name": "DataAsText",
             "description": "Display component value as text with the specified label",
             "base_unit_name": null,
-            "datas": [["value.text", "<Data1>", ""]],
-            "props": [["label.text", "<Label>", "SomeData:"]]
-            },
+            "datas": [["data_component", "<data>", "<sump_temp>"]],
+            "props": [["precision", "<precision>", "4"],
+                      ["Slabel_field_text", "<label>", "Temperature"]]
+        },
         "Row": {
             "name": "Row",
-            "description": "Row Layout of installed childs",
+            "description": "Row Layout of configured childs",
             "base_unit_name": null,
             "datas": [],
             "props": [],
             "childs": []
-            }
+        },
     })
 }

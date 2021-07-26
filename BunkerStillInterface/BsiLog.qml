@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQml 2.15
+import Bunker 1.0
 import "./BsiDisplayObjects"
 
 BdoTextBulk {
@@ -15,6 +16,17 @@ BdoTextBulk {
     function addMessage(msg)
     {
         log_display.text += "\n" + dttm.toLocaleString(locale, "yyMMdd-HHmmss") + ": " + msg;
+        if (msg.startsWith("(C)")) {
+            color = "red";
+            Sounds.critical.play();
+        } else if (msg.startsWith("(E)")) {
+            color = "orange";
+            Sounds.error.play();
+        } else if (msg.startsWith("(W)")) {
+            color = "yellow";
+        } else {
+            color = Globals.bulkTextBgColor;
+        }
 
         if (log_display.text.length > char_limit) {
             // Make new text the tail of the current text.

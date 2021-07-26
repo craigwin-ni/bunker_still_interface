@@ -47,5 +47,9 @@
         <file>BsiDisplayObjects/BdoButton_MoveUpDown.qml</file>
         <file>BsiDisplayObjects/BdoDialog_Verify.qml</file>
         <file>BsiSystemPages/Bpp_PageGenerator.qml</file>
+        <file>javascript/name_util.js</file>
+        <file>sounds/beep-error.wav</file>
+        <file>sounds/smoke-detector-1.wav</file>
+        <file>imports/Bunker/Sounds.qml</file>
     </qresource>
 </RCC>

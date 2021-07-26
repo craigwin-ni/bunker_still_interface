@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import "../javascript/name_util.js" as Nutiljs
 
 ListModel {
     id: connectionModel
@@ -23,10 +24,7 @@ ListModel {
     // This function is called by ListNameAdder
     function addElement(jsobject) {
         // enforce no-underscore rule for connection name
-        if (indexOf("_", jsobject.name) >=0) {
-            jsobject.name = jsobject.name.replace(/_/, "=");
-            log.addMessage("Connection name changed to '" + jsobject.name + "' to eliminate underscore");
-        }
+        jsobject.name = Nutiljs.connection_name_transform(jsobject.name);
 
         // check for duplicate name and if so, modify name
         let new_name = jsobject.name;

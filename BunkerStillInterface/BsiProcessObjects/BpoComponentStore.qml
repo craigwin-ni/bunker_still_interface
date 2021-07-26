@@ -4,6 +4,7 @@ import "../BsiDisplayObjects"
 QtObject {  // why not QtObject?
     id: componentStore
 
+    property var component_sets: ({})
     property var components: ({})
 
     property int compstore_state: 0  // 0: disconnected, 1: connected
@@ -35,8 +36,10 @@ QtObject {  // why not QtObject?
                 componentStore.set_component_value(new_value);
             }
 
-            function getValueText() {
+            function getValueText(prec) {
                 var text, units;
+
+                if (!prec) prec = precision;
 
                 switch (details.type) {
                 case "TEXT":       // fall through
@@ -71,8 +74,16 @@ QtObject {  // why not QtObject?
 
         function onConnection_made() {
             log.addMessage("BsiComponentStore connected.")
-            // delete old set of components
-            components = {};
+
+            // set up component storage for this still
+            let still = status_banner.connected_still
+            if (!still) {
+                components = {};
+            } else {
+                if (!component_sets[still]) component_sets[still] = {};
+                components = component_sets[still];
+            }
+
             compstore_state = 1;
 
             // subscribe to message feed and connect message handler

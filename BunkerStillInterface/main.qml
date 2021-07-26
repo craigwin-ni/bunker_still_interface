@@ -27,12 +27,14 @@ Window {
     }
 
     SplitView {
+        id: page_log_split_view
         orientation: Qt.Vertical
         anchors.top: status_banner.bottom
         anchors.bottom: parent.bottom
         width: parent.width
 
         BsiPager {
+            id: pager
             width: parent.width
             SplitView.fillHeight: true
         }

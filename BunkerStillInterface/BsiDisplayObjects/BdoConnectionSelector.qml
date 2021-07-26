@@ -13,7 +13,6 @@ RowLayout{
         id: connectionSelector
 
         property string connected_still: ""
-        onCurrentTextChanged: { connectionSelector.connected_still = (currentIndex > 0)? currentText : "";}
 
         implicitHeight: 26
         implicitWidth: 180
@@ -63,6 +62,7 @@ RowLayout{
                         connectionSelector.model = ["Connect"].concat(new_names);
                     }
                     connectionSelector.currentIndex = new_index;
+                    connected_still = index === 0? "" : connectionModel.connectionNames()[index-1];
                 }
             }
         }
@@ -82,7 +82,8 @@ RowLayout{
                 log.addMessage("Connect to " + connectionModel.get(index-1).name);
                 model = ["Disconnect"].concat(connectionModel.connectionNames());
             }
-            currentIndex = index
+            currentIndex = index;  // changing model resets index to 0
+            connected_still = index === 0? "" : connectionModel.connectionNames()[index-1];
         }
     }
 

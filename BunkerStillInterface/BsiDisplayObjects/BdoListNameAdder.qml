@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import "../javascript/name_util.js" as Nutiljs
 
 Row {
     id: listNameAdder
@@ -9,13 +10,19 @@ Row {
     property var newElement: null
 
     function continueAdd() {
+        let name = newListName.text.trim();
+        if (!Nutiljs.is_name(name)) {
+            log.addMessage("(E) Invalid character in name '" + name + "'");
+            return;
+        }
+
         addNameInfo.visible = false;
         newListName.focus = false;
-        let name = newListName.text.trim();
         if (!name) {
             addButton.visible = true;
             return;
         }
+
         blankListEntry.name = name;
         newElement = blankListEntry;  // change signals parent of element readiness
 

@@ -43,8 +43,8 @@ ComboBox {
 
         let index = list.indexOf(requested_page);
         if (index < 0) {
-            requested_page = "";  // Clear
             log.addMessage("Error: requested page \"" + requested_page + "\" not available");
+            requested_page = "";  // Clear
             return;
         }
         currentIndex = index;
@@ -63,7 +63,7 @@ ComboBox {
 
         } else {
             // a dynamic page generated into the file system
-            current_page_file = [Putiljs.page_baseurl + page_folder.get(index, "fileName"),
+            current_page_file = [Putiljs.page_basepath + page_folder.get(index, "fileName"),
                                  page_folder.get(index, "fileModified")];
         }
     }
@@ -73,7 +73,7 @@ ComboBox {
         let page_count = page_folder.count;
         for (let i_page=0; i_page<page_count; i_page++) {
             let basename = page_folder.get(i_page, "fileBaseName");
-            page_list.push(basename.substring(basename.lastIndexOf("_")+1));
+            page_list.push(basename.substring(basename.indexOf("_")+1));
         }
         page_list.push("Edit Connections");
         page_list.push("Edit Pages");
@@ -93,14 +93,16 @@ ComboBox {
                                  null];
         } else {
             currentIndex = index;
-            if (index < page_folder.count) {
+            if (index === 0 || index > page_folder.count) {
+                // The current page is one of the system pages.
+                // There is nothing to update.
+            } else {
+                // Index between 1 and page_folder.count.
                 // The current page is from the page folder.
                 // Post the file modified date in case it changed.
-                current_page_file = [Putiljs.page_baseurl + page_folder.get(index, "fileName"),
-                                     page_folder.get(index, "fileModified")];
-            } else {
-                // The current page is one of the system editors.
-                // There is nothing to update.
+                // Increment index to account for position 0 filled with system default page.
+                current_page_file = [Putiljs.page_basepath + page_folder.get(index+1, "fileName"),
+                                     page_folder.get(index+1, "fileModified")];
             }
         }
     }
@@ -130,9 +132,6 @@ ComboBox {
         target: status_banner
         function onConnected_stillChanged() {
             page_folder.nameFilters = [Putiljs.page_file_from_name("*")]
-            load_selector_choices();
-            console.log("page_folder: folder " + page_folder.folder);
-            console.log("page_folder: filter " + page_folder.nameFilters + ", count " + page_folder.count);
         }
     }
 }

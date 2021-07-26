@@ -5,8 +5,11 @@ import "../imports/Bunker" 1.0
 import "../BsiProcessObjects"
 
 Column {
+    id: assignments_editor
+
     property string title: "Assignments"
     property bool showHide: true;
+    property bool final_resolve: false;
     property int indent: 0
     property var assignments_owner: null
 
@@ -25,11 +28,13 @@ Column {
     BpoPuAssignmentListModel {
         id: datas_model
         is_datas: true
+        final_resolve: assignments_editor.final_resolve
     }
 
     BpoPuAssignmentListModel {
         id: props_model
         is_datas: false
+        final_resolve: assignments_editor.final_resolve
     }
 
     RowLayout {

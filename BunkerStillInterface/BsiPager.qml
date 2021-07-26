@@ -1,9 +1,11 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import TextFile 1.0
 import Bunker 1.0
 
 import "javascript/page_creator.js" as PageCreator
+import "javascript/page_util.js" as Putiljs
 
 Rectangle {
     id: pager
@@ -21,15 +23,28 @@ Rectangle {
     border.width: 2
 
     ScrollView {
+        id: page_scrollview
+
         clip: true
         anchors.fill: parent
         objectName: "pager-scrollview"
         padding: 2
 
-        RowLayout {
+        Item {
             id: page_display
             objectName: "pager-item"
             // Pages added here so that ScrollView has only one child
+        }
+    }
+
+    TextFile {
+        id: pagefile
+
+        onErrorChanged: {
+            if (error) {
+                let msg = error_msg(errnum);
+                log.addMessage("(E) Error reading page file '" + path + "': " + msg);
+            }
         }
     }
 
@@ -45,7 +60,7 @@ Rectangle {
             if (!page_entry) {
                 page_entry = pages[page_file] = {"file": page_file, "date": page_timestamp, "page": null};
             }
-            if (!page_entry.page || page_entry.date && page_entry.date !== page_timestamp) {
+            if (!page_entry.page || (page_entry.date && page_entry.date !== page_timestamp)) {
                 // need to generate a new page
                 page_entry.date = page_timestamp;
                 if (page_entry.page) {
@@ -54,10 +69,14 @@ Rectangle {
                 }
 
                 let prior_page = displayed_page? pages[displayed_page].page : null;
-                PageCreator.createPageObject(page_entry, prior_page);
+                if (page_entry.file.startsWith("qrc:")) {
+                    PageCreator.createPageObject(page_entry, prior_page);
+                } else {
+                    PageCreator.createPageFromQml(page_entry, prior_page, pagefile);
+                }
             } else {
                 // show the existing page
-                pages[displayed_page].page.visible = false;
+                if (displayed_page) pages[displayed_page].page.visible = false;
                 page_entry.page.visible = true;
                 displayed_page = page_entry.file;
             }

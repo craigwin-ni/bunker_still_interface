@@ -5,6 +5,7 @@ import Bunker 1.0
 import "../BsiDisplayObjects"
 import "../BsiProcessObjects"
 import "../javascript/page_editor.js" as Peditjs
+import "../javascript/name_util.js" as Nutiljs
 
 ColumnLayout {
     id: page_unit_editor
@@ -32,7 +33,6 @@ ColumnLayout {
         page_unit_selector.currentIndex = -1;
         child_listModel.page_unit = edit_unit;
         assignment_lists.assignments_owner = edit_unit;
-//        children_section.visible = edit_unit.childs ;// ? true : false;
     }
 
     function reenter_editor(next_page_unit_name) {
@@ -268,6 +268,7 @@ ColumnLayout {
             text: "Save"
             onClicked: {
                 console.log("PU_Edit Save");
+                console.log(".. saving page_unit:\n"+JSON.stringify(edit_unit, 0, 2));
                 page_unit_model.put_page_unit(edit_unit);
                 exit_editor();
             }
@@ -308,7 +309,7 @@ ColumnLayout {
                 console.log("PageUnitEditor.SaveAs: save page_unit '" + edit_unit.name
                             + "' as '"+name+"'");
                 if (name) {
-                    if (!Peditjs.validate_name(name)) {
+                    if (!Nutiljs.is_name(name)) {
                         log.addMessage("(E) Invalid page_unit name: '" + name + "'");
                         name = "";
                     } else if (page_unit_model.bu_list.indexOf(name) >= 0) {

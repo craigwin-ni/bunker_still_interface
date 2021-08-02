@@ -17,6 +17,13 @@ Column {
             // This indicated the user has entered a page generator session.
             page_unit_model = pager.page_unit_model;
             root_unit = page_unit_model.get_page_unit(pager.page_unit_name);
+            if (!root_unit) {
+                log.addMessage("(E) PageGenerator: page unit '" + pager.page_unit_name
+                               + "' could not be found");
+                status_banner.requested_page = "Edit Pages";
+                return;
+            }
+
             // do deep update and get unresolved standins
             Peditjs.updatePageUnitStandins(root_unit, true);
             unresolved = Peditjs.extractStandins(root_unit);

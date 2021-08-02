@@ -51,5 +51,8 @@
         <file>sounds/beep-error.wav</file>
         <file>sounds/smoke-detector-1.wav</file>
         <file>imports/Bunker/Sounds.qml</file>
+        <file>BsiSystemPages/Bsp_Graf_Page.qml</file>
+        <file>BsiBaseUnits/Bbu_WebView.qml</file>
+        <file>BsiBaseUnits/Bbu_Gauge.qml</file>
     </qresource>
 </RCC>

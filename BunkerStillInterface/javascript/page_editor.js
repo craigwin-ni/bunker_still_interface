@@ -53,19 +53,22 @@ function blank_page_unit() {
     //               "base_unit_name": <base_unit_name>,
     //               "datas": [<datas 2-tuple>, ...],
     //               "props": [<props 3-tuple>, ...],
-    //    (optional) "childs": [<child>, ...] }
-    // child is {"unit_name": <page/base_unit_name>,
-    //           "datas": [<datas 2-tuple>, ...],
+    //    (optional) "childs": [<a_child>, ...] }
+    // a_child is {"unit_name": <page/base_unit_name>,
+    //           "datas": [<datas 3-tuple>, ...],
     //           "props":[<props 3-tuple>}
-    // datas 2-tuple is [<extracted stand-in>, <resolution stand-in>]
-    // props 3-tuple is [<extracted stand-in>, <resolution stand-in or value>, <example value>]
+    // datas 3-tuple is [<extracted_stand-in>, <resolution_stand-in>, <example_value>]
+    // props 3-tuple is [<extracted_stand-in>, <resolution_stand-in|value>, <example_value>]
+    // Notes: example_value should indicate type (string, int, etc) and typical value;
+    //        datas standins are not resolved to a value until page generation;
+    //        identifiers 'child' and 'children' are used by QML so I avoid them.
     return {
             name: "",
             description: "",
             base_unit_name: "",
             datas: [],
             props: [],
-            // childs: [], (optional), added dynamically if required
+            // childs: [], (optional), added dynamically when required
             };
 }
 
@@ -109,16 +112,17 @@ function updatePageUnitStandins(page_unit, deep) {
 
     // extract and merge standins from each child
     for (i_child=0; i_child<childs.length; i_child++) {
-        child_name = childs[i_child].unit_name;
-        child_unit = pu_model.get_page_unit(child_name);
+        let a_child = childs[i_child];
+        child_unit = pu_model.get_page_unit(a_child.unit_name);
         if (!child_unit) {
-            log.addMessage("(C) updatePageUnitStandins: child unit '" + child_name + "' of page unit '" +
+            log.addMessage("(C) updatePageUnitStandins: child unit '"
+                           + a_child.unit_name + "' of page unit '" +
                            page_unit.name + "' is not in pageUnitModel");
             continue;
         }
         let extracted = extractStandins(child_unit);
-        modified = mergeStandins(child_unit.datas, extracted.datas) || modified;
-        modified = mergeStandins(child_unit.props, extracted.props) || modified;
+        modified = mergeStandins(a_child.datas, extracted.datas) || modified;
+        modified = mergeStandins(a_child.props, extracted.props) || modified;
     }
     if (modified) {
         pu_model.put_page_unit(page_unit);
@@ -163,6 +167,7 @@ function extractStandins(page_unit) {
 
     extracted = {"datas": datas, "props": props};
 
+//    console.log("extractStandins extracted: " + JSON.stringify(extracted, 0, 2));
     return extracted;
 }
 
@@ -188,7 +193,9 @@ function mergeStandins(standins, new_standins) {
     var i_list;
     let modified = false;
 
-    // eliminate outdated standins: those not in new_standins.
+//    console.log("mergeStandins:\n... new: "+JSON.stringify(new_standins, 0, 2)
+//                +"\n... old: "+JSON.stringify(standins, 0, 2));
+    // eliminate outdated standins, those not in new_standins.
     for (i_list=standins.length-1; i_list>=0; i_list--) {
         standin = standins[i_list];
         let keep = false;
@@ -204,7 +211,7 @@ function mergeStandins(standins, new_standins) {
         }
     }
 
-    // update with new entries
+    // update with new entries, those in new_standins but not in standins
     for (i_list=0; i_list<new_standins.length; i_list++) {
         new_standin = new_standins[i_list];
         let add = true;
@@ -223,6 +230,7 @@ function mergeStandins(standins, new_standins) {
         standins.sort((a, b) => {return a[0]>b[0]? 1: -1;});
         modified = true;
     }
+//    console.log("\n... merge: "+JSON.stringify(standins, 0, 2)+"\n...modified: "+modified);
 
     return modified;
 }
@@ -230,7 +238,7 @@ function mergeStandins(standins, new_standins) {
 function add_page_unit_child(page_unit, child_unit_name) {
     // Note: This does not update the pageUnitModel
     //       It is for editing purposes and editor may cancel result.
-    //       Use put_page_unit to preserve changes.
+    //       Use put_page_unit in editor to preserve changes.
     if (!page_unit.childs) {
         log.addMessage("(C) Jeditps.add_page_unit_child: attempt to add child '" + child_unit_name
                        + "' to non-structural page unit '" + page_unit.name + "'");
@@ -244,6 +252,15 @@ function add_page_unit_child(page_unit, child_unit_name) {
         return null;
     }
 
+    // Scan descendants of child_unit for occurrance of page_unit.
+    // This indicates a cycle that must be disallowed.
+    if (child_unit.name === page_unit.name || scan_for_descendant(child_unit, page_unit.name)) {
+        log.addMessage("(E) Jeditps.add_page_unit_child: page_unit '" + page_unit.name
+                       + "' is a descendant of '" + child_unit_name + "' so it cannot add '"
+                       + child_unit_name + "' as a child.");
+        return null;
+    }
+
     let extracted = extractStandins(child_unit);
 
     let new_child = {
@@ -253,6 +270,16 @@ function add_page_unit_child(page_unit, child_unit_name) {
             };
     page_unit.childs.push(new_child);
     return new_child;
+}
+
+function scan_for_descendant(page_unit, descendant_name) {
+    if (!page_unit.childs) return false;
+    for (let a_child in page_units.childs) {
+        if (a_child.unit_name === descendant_name) return true;
+        let child_unit = pager.page_unit_model.get_page_unit(a_child.unit_name);
+        if (scan_for_descendants(child_unit, descendant_name)) return true;
+    }
+    return false;
 }
 
 function pagegen(page_unit, resolution, page_name) {
@@ -342,7 +369,8 @@ function generate_unit(page_unit, resolution, indent) {
             page_text += " ".repeat(indent) + "// Property assignments\n";
             for (prop of base_unit.props) {
                 if (prop[0].startsWith("S")) {
-                    page_text += " ".repeat(indent) + prop[0].slice(1) + " = \"" + prop[1] + "\";\n";
+                    let escaped_prop = prop[1].replace("\"", "\\\"");
+                    page_text += " ".repeat(indent) + prop[0].slice(1) + " = \"" + escaped_prop + "\";\n";
                 } else {
                     page_text += " ".repeat(indent) + prop[0] + " = " + prop[1] + ";\n";
                 }
@@ -376,12 +404,12 @@ function resolve_page_unit(page_unit, resolution) {
     resolution.props.forEach((tuple)=>{props_dict[tuple[0]] = tuple[1];});
     var data, prop, child;
 
-    if (page_unit.name === "DataAsText") {
-        console.log("DataAsText unit resolution:");
-        console.log("... base_unit:" + JSON.stringify(page_unit,0,2));
-        console.log("... resolution:" + JSON.stringify(resolution));
-        console.log("... props dict:" + JSON.stringify(props_dict, 0, 2));
-    }
+//    if (page_unit.name === "DataAsText") {
+//        console.log("DataAsText unit resolution:");
+//        console.log("... base_unit:" + JSON.stringify(page_unit,0,2));
+//        console.log("... resolution:" + JSON.stringify(resolution));
+//        console.log("... props dict:" + JSON.stringify(props_dict, 0, 2));
+//    }
 
     for (data of page_unit.datas) {
         data[1] = datas_dict[data[1]] || data[1];

@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += quick qml mqtt core gui
+QT += quick qml mqtt core gui webview
 
 CONFIG += c++11
 

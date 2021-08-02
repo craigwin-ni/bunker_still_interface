@@ -33,6 +33,7 @@ ColumnLayout {
         page_unit_selector.currentIndex = -1;
         child_listModel.page_unit = edit_unit;
         assignment_lists.assignments_owner = edit_unit;
+//        console.log("PageUnitEditor edit_unit: "+JSON.stringify(edit_unit, 0, 2));
     }
 
     function reenter_editor(next_page_unit_name) {
@@ -204,7 +205,6 @@ ColumnLayout {
         id: children_section
 
         leftPadding: Globals.indent_step * 2
-//        anchors.leftMargin: Globals.indent_step * 2
         visible: (edit_unit && edit_unit.childs) ? true : false
 
         Text {
@@ -268,7 +268,7 @@ ColumnLayout {
             text: "Save"
             onClicked: {
                 console.log("PU_Edit Save");
-                console.log(".. saving page_unit:\n"+JSON.stringify(edit_unit, 0, 2));
+//                console.log(".. saving page_unit:\n"+JSON.stringify(edit_unit, 0, 2));
                 page_unit_model.put_page_unit(edit_unit);
                 exit_editor();
             }

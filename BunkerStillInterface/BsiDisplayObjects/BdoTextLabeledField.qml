@@ -10,11 +10,13 @@ RowLayout {
     property alias label_width: label.minimumWidth
     property alias label_size: label.pointSize
     property alias label_bold: label.bold
+    property string label_align: "left" // "left", "right", or "center"
 
     property alias input_text: input.text
     property alias input_width: input.minimumWidth
     property alias input_size: input.pointSize
     property alias input_bold: input.bold
+    property string input_align: "left" // "left", "right", or "center"
 
     property int field_height: Globals.label_text_height
     property alias read_only: input.readOnly
@@ -23,6 +25,21 @@ RowLayout {
 
     Component.onCompleted: {
         input.editingFinished.connect(input_ready);
+    }
+
+    onLabel_alignChanged: {
+        switch (label_align) {
+        case "right": label.horizontalAlignment = TextInput.AlignRight; break;
+        case "center": label.horizontalAlignment = TextInput.AlignHCenter; break;
+        default: label.horizontalAlignment = TextInput.AlignLeft; break;
+        }
+    }
+    onInput_alignChanged: {
+        switch (input_align) {
+        case "right": input.horizontalAlignment = TextInput.AlignRight; break;
+        case "center": input.horizontalAlignment = TextInput.AlignHCenter; break;
+        default: input.horizontalAlignment = TextInput.AlignLeft; break;
+        }
     }
 
     BdoTextField {

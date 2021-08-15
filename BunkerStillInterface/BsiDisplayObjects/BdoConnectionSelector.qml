@@ -15,7 +15,7 @@ RowLayout{
         property string connected_still: ""
 
         implicitHeight: 26
-        implicitWidth: 180
+        implicitWidth: 157
         font.bold: true
         font.pointSize: 11
         font.family: "Arial"

@@ -9,6 +9,7 @@ Column {
 
     property string title: "Assignments"
     property bool showHide: true;
+    property bool startClosed: true;
     property bool final_resolve: false;
     property int indent: 0
     property var assignments_owner: null
@@ -43,6 +44,7 @@ Column {
 
         BdoButton_ShowHide {
             visible: showHide
+            visibility: !startClosed
             onVisibilityChanged: {
                 assignments_display.visible = visibility;
             }
@@ -57,7 +59,7 @@ Column {
     ColumnLayout {
         id: assignments_display
 
-        visible: !(title && showHide)
+        visible: startClosed? !(title && showHide) : true
 
         ListView {
             id: datas_list

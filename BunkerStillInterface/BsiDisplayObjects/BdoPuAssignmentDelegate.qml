@@ -60,6 +60,14 @@ Row {
         visible: use_selector
         text: "Still component"
 
+        Component.onCompleted: {
+            if (!assignment_1 || Nutiljs.is_stand_in(assignment_1)) {
+                text = "Still component";
+            } else {
+                text = assignment_1;
+            }
+        }
+
         onSelected_nameChanged: {
             text = selected_name;
             parent.parent.parent.model.update_assignment(assignment_1, selected_name);

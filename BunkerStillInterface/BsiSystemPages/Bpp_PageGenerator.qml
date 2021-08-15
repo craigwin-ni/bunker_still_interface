@@ -8,14 +8,18 @@ import "../javascript/page_util.js" as Putiljs
 Column {
     id: page_generator
 
-    property var page_unit_model
     property var root_unit
-    property var unresolved
 
     onVisibleChanged: {
         if (visible) {
             // This indicated the user has entered a page generator session.
-            page_unit_model = pager.page_unit_model;
+            let page_unit_model = pager.page_unit_model;
+            let still = status_banner.connected_still;
+            if (!still) {
+                log.addMessage("(C) PageGenerator entered without still connection.");
+                status_banner.requested_page = "Edit Pages";
+                return;
+            }
             root_unit = page_unit_model.get_page_unit(pager.page_unit_name);
             if (!root_unit) {
                 log.addMessage("(E) PageGenerator: page unit '" + pager.page_unit_name
@@ -26,8 +30,15 @@ Column {
 
             // do deep update and get unresolved standins
             Peditjs.updatePageUnitStandins(root_unit, true);
-            unresolved = Peditjs.extractStandins(root_unit);
-            assignment_lists.assignments_owner = unresolved;
+            let unresolved = Peditjs.extractStandins(root_unit);
+
+            // merge in prior resolutions and present to user
+            if (!root_unit.resolutions) root_unit.resolutions = {};
+            if (!root_unit.resolutions[still]) root_unit.resolutions[still] = unresolved;
+            Peditjs.mergeStandins(root_unit.resolutions[still].datas, unresolved.datas);
+            Peditjs.mergeStandins(root_unit.resolutions[still].props, unresolved.props);
+//            console.log("PageGenerator resolutions: "+JSON.stringify(root_unit.resolutions[still], 0, 2));
+            assignment_lists.assignments_owner = root_unit.resolutions[still];
         }
     }
 
@@ -57,15 +68,20 @@ Column {
             text: "Continue"
 
             onClicked: {
+                let page_unit_model = pager.page_unit_model;
+                let still = status_banner.connected_still;
+                page_unit_model.put_page_unit(root_unit);  // save resolutions
+
                 // pagegen will check that all standins are resolved.
                 let page_name = root_unit.name;  // XXX need to accept different name
-                let page_text = Peditjs.pagegen(root_unit, unresolved, page_name);
+                let page_text = Peditjs.pagegen(root_unit, root_unit.resolutions[still], page_name);
                 if (!page_text) return;
                 // save page text in pages folder.
                 pagefile.path = Putiljs.page_path_from_name(page_name);
                 if (!pagefile.path) return;
                 pagefile.write(page_text);
                 if (pagefile.error) return;
+
 
                 status_banner.requested_page = "Edit Pages";
             }

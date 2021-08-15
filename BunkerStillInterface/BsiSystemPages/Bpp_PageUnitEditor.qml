@@ -20,6 +20,11 @@ ColumnLayout {
             // This indicated the user has entered a page unit edit session.
             page_unit_model = pager.page_unit_model;
             edit_unit = page_unit_model.get_page_unit(pager.page_unit_name);
+            if (!edit_unit) {
+                log.addMessage("(E) PageUnitEditor cannot initial-load page unit '"
+                               +pager.page_unit_name+"'");
+            }
+
             // deep update on entry to editing session
             Peditjs.updatePageUnitStandins(edit_unit, true);
             init_editor();
@@ -42,6 +47,10 @@ ColumnLayout {
         child_listModel.clear();
         child_listView.forceLayout();
         edit_unit = page_unit_model.get_page_unit(next_page_unit_name);
+        if (!edit_unit) {
+            log.addMessage("(E) PageUnitEditor cannot reenter-load page unit '"
+                           +pager.page_unit_name+"'");
+        }
         init_editor();
     }
 
@@ -199,6 +208,7 @@ ColumnLayout {
     BdoPuAssignments {
         id: assignment_lists
         indent: 1
+        startClosed: false
     }
 
     Column {

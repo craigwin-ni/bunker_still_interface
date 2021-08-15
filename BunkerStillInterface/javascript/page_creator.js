@@ -33,10 +33,11 @@ function finishPageCreation() {
     pager.displayed_page = page_entry.file;
 }
 
-function createPageFromQml(page_entry, prior_page, textio) {
+function createPageFromQml(page_entry, prior_page, textio, page_parent) {
+    if (!page_parent) page_parent = page_display;
     textio.set_path(page_entry.file);
     let page_text = textio.read();
-    let page = Qt.createQmlObject(page_text, page_display);
+    let page = Qt.createQmlObject(page_text, page_parent);
     if (!page) {
         log.addMessage("(E) Failed to create page '" + page_entry.name + "' from QML.");
         return;
@@ -44,5 +45,7 @@ function createPageFromQml(page_entry, prior_page, textio) {
     page_entry.page = page;
     if (prior_page) prior_page.visible = false;
     page.visible = true;
-    pager.displayed_page = page_entry.file;
+    if (page_parent === page_display) {
+        pager.displayed_page = page_entry.file;
+    }
 }

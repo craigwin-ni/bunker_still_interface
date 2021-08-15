@@ -94,36 +94,38 @@ function updatePageUnitStandins(page_unit, deep) {
     }
 
     let childs = page_unit.childs;
-    if (!childs) return modified;
 
-    var i_child, child_name, child_unit;
-    if (deep) {
-        // update each child
+    if (childs) {
+        var i_child, child_name, child_unit;
+        if (deep) {
+            // update each child
+            for (i_child=0; i_child<childs.length; i_child++) {
+                child_unit = pu_model.get_page_unit(childs[i_child].unit_name);
+                if (!child_unit) {
+                    log.addMessage("(C) updatePageUnitStandins: cannot find child page_unit '"
+                                   + childs[i_child].unit_name);
+                    continue;
+                }
+                updatePageUnitStandins(child_unit, deep);
+            }
+        }
+
+        // extract and merge standins from each child
         for (i_child=0; i_child<childs.length; i_child++) {
-            child_unit = pu_model.get_page_unit(childs[i_child].unit_name);
+            let a_child = childs[i_child];
+            child_unit = pu_model.get_page_unit(a_child.unit_name);
             if (!child_unit) {
-                log.addMessage("(C) updatePageUnitStandins: cannot find child page_unit '"
-                               + childs[i_child].unit_name);
+                log.addMessage("(C) updatePageUnitStandins: child unit '"
+                               + a_child.unit_name + "' of page unit '" +
+                               page_unit.name + "' is not in pageUnitModel");
                 continue;
             }
-            updatePageUnitStandins(child_unit, deep);
+            let extracted = extractStandins(child_unit);
+            modified = mergeStandins(a_child.datas, extracted.datas) || modified;
+            modified = mergeStandins(a_child.props, extracted.props) || modified;
         }
     }
 
-    // extract and merge standins from each child
-    for (i_child=0; i_child<childs.length; i_child++) {
-        let a_child = childs[i_child];
-        child_unit = pu_model.get_page_unit(a_child.unit_name);
-        if (!child_unit) {
-            log.addMessage("(C) updatePageUnitStandins: child unit '"
-                           + a_child.unit_name + "' of page unit '" +
-                           page_unit.name + "' is not in pageUnitModel");
-            continue;
-        }
-        let extracted = extractStandins(child_unit);
-        modified = mergeStandins(a_child.datas, extracted.datas) || modified;
-        modified = mergeStandins(a_child.props, extracted.props) || modified;
-    }
     if (modified) {
         pu_model.put_page_unit(page_unit);
     }
@@ -274,10 +276,17 @@ function add_page_unit_child(page_unit, child_unit_name) {
 
 function scan_for_descendant(page_unit, descendant_name) {
     if (!page_unit.childs) return false;
-    for (let a_child in page_units.childs) {
+    for (let a_child of page_unit.childs) {
         if (a_child.unit_name === descendant_name) return true;
         let child_unit = pager.page_unit_model.get_page_unit(a_child.unit_name);
-        if (scan_for_descendants(child_unit, descendant_name)) return true;
+        if (!child_unit) {
+            log.addMessage("(E) Peditjs.scan_for_descendant("+descendant_name
+                           +"): cannot get child unit '"+a_child.unit_name+"'");
+            console.log("Peditjs.scan_for_descendant: error on childs: "+JSON.stringify(page_unit, 0, 2));
+            continue;
+        }
+
+        if (scan_for_descendant(child_unit, descendant_name)) return true;
     }
     return false;
 }
@@ -304,39 +313,17 @@ function pagegen(page_unit, resolution, page_name) {
 
     // Generate top of QML file.
     page_text = (" " + qml_file_head).slice(1);
-    page_text += "Item {\n";
-
-    // Generate global Data connections
-//    page_text += generate_global_connections(resolution.datas, 2);
+//    page_text += "Item {\n";
 
     // Recursively generate page contents
     page_text += generate_unit(page_unit, resolution, 2);
 
     // Generate bottom of QML file.
-    page_text += "}\n\n// End of generated QML\n";
+//    page_text += "}\n\n// End of generated QML\n";
+    page_text += "\n// End of generated QML\n";
 
     return page_text;
 }
-
-//function generate_global_connections(datas, indent) {
-//    let page_text = "";
-//    // Work with uniquified version of col 2 of resolution.datas
-//    let dataset = new Set(datas.map(d=>{return d[1]}));
-
-//    var data_name;
-//    page_text += " ".repeat(indent) + "//\n";
-//    page_text += " ".repeat(indent) + "// Setup up data connections for page.\n";
-//    for (data_name of dataset) {
-//        page_text += " ".repeat(indent) + "property var " + data_name + ": null\n";
-//    }
-//    page_text += " ".repeat(indent) + "Component.onCompleted: {\n";
-//    for (data_name of dataset) {
-//        page_text += " ".repeat(indent+2) + data_name
-//                + " = componentStore.get_component(\"" + data_name + "\");\n";
-//    }
-//    page_text += " ".repeat(indent) + "}\n\n";
-//    return page_text;
-//}
 
 function generate_unit(page_unit, resolution, indent) {
     let page_text = "";
@@ -353,32 +340,32 @@ function generate_unit(page_unit, resolution, indent) {
     indent += 2;
 
     var data, prop;
-    if (base_unit.props.length + base_unit.datas.length) {
+//    if (base_unit.props.length + base_unit.datas.length) {
+    if (base_unit.datas.length) {
         page_text += "\n" + " ".repeat(indent) + "Component.onCompleted: {\n";
         indent += 2;
-        if (base_unit.datas.length) {
-            page_text += " ".repeat(indent) + "//\n";
-            page_text += " ".repeat(indent) + "// Data assignments\n";
-            for (data of base_unit.datas) {
-                page_text += " ".repeat(indent) + data[0]
-                             + " = componentStore.get_component(\"" + data[1] + "\");\n";
-            }
-        }
-        if (base_unit.props.length) {
-            page_text += " ".repeat(indent) + "//\n";
-            page_text += " ".repeat(indent) + "// Property assignments\n";
-            for (prop of base_unit.props) {
-                if (prop[0].startsWith("S")) {
-                    let escaped_prop = prop[1].replace("\"", "\\\"");
-                    page_text += " ".repeat(indent) + prop[0].slice(1) + " = \"" + escaped_prop + "\";\n";
-                } else {
-                    page_text += " ".repeat(indent) + prop[0] + " = " + prop[1] + ";\n";
-                }
-            }
+        page_text += " ".repeat(indent) + "//\n";
+        page_text += " ".repeat(indent) + "// Data assignments\n";
+        for (data of base_unit.datas) {
+            page_text += " ".repeat(indent) + data[0]
+                         + " = componentStore.get_component(\"" + data[1] + "\");\n";
         }
         indent -= 2;
         page_text += " ".repeat(indent) + "}\n";
     }
+    if (base_unit.props.length) {
+        page_text += " ".repeat(indent) + "//\n";
+        page_text += " ".repeat(indent) + "// Property assignments\n";
+        for (prop of base_unit.props) {
+            if (prop[0].startsWith("S")) {
+                let escaped_prop = prop[1].replace("\"", "\\\"");
+                page_text += " ".repeat(indent) + prop[0].slice(1) + ": \"" + escaped_prop + "\"\n";
+            } else {
+                page_text += " ".repeat(indent) + prop[0] + ": " + prop[1] + "\n";
+            }
+        }
+    }
+//    }
 
     // Generate each child
     if (page_unit.childs) {
@@ -404,13 +391,6 @@ function resolve_page_unit(page_unit, resolution) {
     resolution.props.forEach((tuple)=>{props_dict[tuple[0]] = tuple[1];});
     var data, prop, child;
 
-//    if (page_unit.name === "DataAsText") {
-//        console.log("DataAsText unit resolution:");
-//        console.log("... base_unit:" + JSON.stringify(page_unit,0,2));
-//        console.log("... resolution:" + JSON.stringify(resolution));
-//        console.log("... props dict:" + JSON.stringify(props_dict, 0, 2));
-//    }
-
     for (data of page_unit.datas) {
         data[1] = datas_dict[data[1]] || data[1];
     }
@@ -430,9 +410,10 @@ function resolve_page_unit(page_unit, resolution) {
     }
 }
 
-const qml_file_head = "// This file is generated from a page_unit.  Edits may be overwritten.\n" +
-                    "import QtQuick 2.15\n" +
-                    "import QtQuick.Controls 2.15\n" +
-                    "import \"../BsiBaseUnits\"\n" +
-                    "import \"../BsiDisplayObjects\"\n" +
-                    "import Bunker 1.0\n\n"
+const qml_file_head = "// This file is generated from a page_unit.  Edits may be overwritten.\n"
+                      + "import QtQuick 2.15\n"
+//                      + "import QtQuick.Controls 2.15\n"
+                      + "import \"../BsiBaseUnits\"\n"
+//                      + "import \"../BsiDisplayObjects\"\n"
+//                      + "import Bunker 1.0\n"
+                      + "\n"

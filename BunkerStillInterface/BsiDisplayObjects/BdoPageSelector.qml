@@ -75,8 +75,9 @@ ComboBox {
             let basename = page_folder.get(i_page, "fileBaseName");
             page_list.push(basename.substring(basename.indexOf("_")+1));
         }
-        page_list.push("Edit Connections");
+        page_list.push("Data Viewer");
         page_list.push("Edit Pages");
+        page_list.push("Edit Connections");
         page_list.push("Show Files");
         return page_list;
     }
@@ -88,9 +89,10 @@ ComboBox {
         if (index < 0) {
             // The current page is no longer in the page folder
             currentIndex = 0;
-            current_page = editText;
-            current_page_file = [Putiljs.system_default_page_url,
-                                 null];
+            requested_page = editText;
+//            current_page = editText;
+//            current_page_file = [Putiljs.system_default_page_url,
+//                                 null];
         } else {
             currentIndex = index;
             if (index === 0 || index > page_folder.count) {

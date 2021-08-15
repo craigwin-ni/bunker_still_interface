@@ -126,11 +126,12 @@ ListModel {
         let page_unit = page_units[unit_name];
         if (!page_unit) {
             log.addMessage("(E) pageUnitModel.get_page_unit: Cannot find unit '" + unit_name + "'");
-            let result = Peditjs.blank_page_unit();
-            result.name = unit_name;
-            result.base_unit_name = "Undefined";
-            result.description = "This page unit does not exist.";
-            return result;
+            return null;
+//            let result = Peditjs.blank_page_unit();
+//            result.name = unit_name;
+//            result.base_unit_name = "Undefined";
+//            result.description = "This page unit does not exist.";
+//            return result;
         }
         return JSON.parse(JSON.stringify(page_unit));
     }

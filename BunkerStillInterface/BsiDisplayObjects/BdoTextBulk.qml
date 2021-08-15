@@ -19,10 +19,12 @@ Rectangle {
 
         clip: true
         anchors.fill: parent
+        contentWidth: availableWidth
 
         Text {
             id: bulk_text
 
+            width: parent.width
             wrapMode: Text.Wrap
             color: Globals.bulkTextColor
             padding: 3

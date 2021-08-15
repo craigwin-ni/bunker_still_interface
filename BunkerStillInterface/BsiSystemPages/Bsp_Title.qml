@@ -5,8 +5,8 @@ Rectangle {
     id: title_page
 
     implicitHeight: bunker_logo.height
-    height: page_scrollview.height
-    width: page_scrollview.width
+    height: page_scrollview.height -4
+    width: page_scrollview.width -4
     color: Globals.mainBgColor
     border.color: Globals.bulkTextBorderColor
     border.width: 2

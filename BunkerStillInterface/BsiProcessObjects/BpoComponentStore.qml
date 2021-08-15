@@ -5,7 +5,7 @@ QtObject {  // why not QtObject?
     id: componentStore
 
     property var component_sets: ({})
-    property var components: ({})
+    property var components: null
 
     property int compstore_state: 0  // 0: disconnected, 1: connected
     property var subscription: null
@@ -38,8 +38,12 @@ QtObject {  // why not QtObject?
 
             function getValueText(prec) {
                 var text, units;
+                if (!details) return null;
 
                 if (!prec) prec = precision;
+
+                if (value === null) return "null";
+                if (value === undefined) return "undefined";
 
                 switch (details.type) {
                 case "TEXT":       // fall through
@@ -78,7 +82,7 @@ QtObject {  // why not QtObject?
             // set up component storage for this still
             let still = status_banner.connected_still
             if (!still) {
-                components = {};
+                components = null
             } else {
                 if (!component_sets[still]) component_sets[still] = {};
                 components = component_sets[still];
@@ -104,11 +108,12 @@ QtObject {  // why not QtObject?
     function update_component(payload) {
         if (payload) {
             let updated_comp = JSON.parse(payload);
-            if (!components[updated_comp.id]) {
+            let comp = components[updated_comp.id];
+            if (!comp) {
                 // create new proxy
-                components[updated_comp.id] = component_proxy.createObject(main_window)
+                comp = components[updated_comp.id] = component_proxy.createObject(main_window);
             }
-            components[updated_comp.id].update(updated_comp);
+            comp.update(updated_comp);
         }
     }
 
@@ -134,7 +139,7 @@ QtObject {  // why not QtObject?
 
     function get_group_names() {
         // return list of group names in alpha-numeric sort order
-//        if (!compstore_state) return undefined;
+        if (!compstore_state) return undefined;
         let unique_group_names = [...new Set(Object.values(components).map(comp=>comp.details.group))];
         unique_group_names.sort();
         return unique_group_names;
@@ -156,8 +161,10 @@ QtObject {  // why not QtObject?
     }
 
     function get_component(name) {
-        if (!components[name]) {
-            components[name] = component_proxy.createObject(main_window)
+        if (!compstore_state) return null;
+        let comp = components[name];
+        if (!comp) {
+            comp = components[name] = component_proxy.createObject(main_window)
         }
         return components[name];
     }
@@ -173,7 +180,7 @@ QtObject {  // why not QtObject?
             return;
         }
 
-        var comp = compoents[name];
+        var comp = components[name];
         if (!comp) {
             log.addMessage("Attempt to set non-existant component '" + name + "' to '" + new_value + "'.");
             return;

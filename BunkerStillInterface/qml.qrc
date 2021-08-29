@@ -57,5 +57,7 @@
         <file>BsiBaseUnits/Bbu_PidText.qml</file>
         <file>BsiBaseUnits/Bbu_GaugeBasic.qml</file>
         <file>BsiBaseUnits/Bbu_GaugeHalf.qml</file>
+        <file>BsiBaseUnits/Bbu_PidGauge.qml</file>
+        <file>BsiBaseUnits/BbuPidBase.qml</file>
     </qresource>
 </RCC>

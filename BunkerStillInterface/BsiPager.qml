@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import TextFile 1.0
@@ -38,8 +38,6 @@ Rectangle {
         Item {
             id: page_display
             // Pages added here so that ScrollView has only one child
-//            width: current_page.width
-//            height: current_page.height
         }
     }
 
@@ -53,34 +51,6 @@ Rectangle {
             }
         }
     }
-
-//    onCurrent_pageChanged: {
-//        if (current_page) {
-//            console.log("Pager.onCurrent_pageChanged: current page width="+current_page.width
-//                        +" implicit="+current_page.implicitWidth);
-//            set_page_width();
-//            set_page_height();
-//            current_page.onWidthChanged.connect(set_page_width);
-//            current_page.onHeightChanged.connect(set_page_height);
-//            current_page.onImplicitWidthChanged.connect(set_page_width);
-//            current_page.onImplicitHeightChanged.connect(set_page_height);
-//        }
-//    }
-
-//    function set_page_width() {
-//        if (current_page) {
-//            page_scrollview.contentWidth = Math.max(pager.width-4, current_page.width, current_page.implicitWidth);
-//        } else if (pager) {
-//            page_scrollview.contentWidth = pager.width-4;
-//        }
-//    }
-//    function set_page_height() {
-//        if (current_page) {
-//            page_scrollview.contentHeight = Math.max(pager.height-4, current_page.height, current_page.implicitHeight);
-//        } else if (pager) {
-//            page_scrollview.contentHeight = pager.height-4;
-//        }
-//    }
 
     Connections {
         target: status_banner
@@ -110,7 +80,7 @@ Rectangle {
             if (!page_entry) {
                 page_entry = pages[page_file] = {"file": page_file, "date": page_timestamp, "page": null};
             }
-            if (!page_entry.page || (page_entry.date && ""+page_entry.date != ""+page_timestamp)) {
+            if (!page_entry.page || (page_entry.date && (""+page_entry.date) != (""+page_timestamp))) {
                 // need to create a new page
                 log.addMessage("Pager creating page from file "+page_entry.file);
                 page_entry.date = page_timestamp;

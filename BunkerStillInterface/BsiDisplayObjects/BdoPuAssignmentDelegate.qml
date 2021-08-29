@@ -70,7 +70,7 @@ Row {
 
         onSelected_nameChanged: {
             text = selected_name;
-            parent.parent.parent.model.update_assignment(assignment_1, selected_name);
+            parent.parent.parent.model.update_assignment(assignment_0, selected_name);
         }
     }
 

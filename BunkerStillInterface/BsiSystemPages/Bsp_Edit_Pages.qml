@@ -22,7 +22,7 @@ ColumnLayout {
         id: pageListView
 
         Layout.preferredHeight: count*30
-        Layout.preferredWidth: 460
+        Layout.preferredWidth: 500
 
         clip: true
         visible: true

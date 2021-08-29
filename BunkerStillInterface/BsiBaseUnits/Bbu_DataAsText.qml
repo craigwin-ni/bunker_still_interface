@@ -31,7 +31,7 @@ Flow {
         }
     }
     onData_alignChanged: {
-        switch (input_align) {
+        switch (data_align) {
         case "right": data_field.horizontalAlignment = TextInput.AlignRight; break;
         case "center": data_field.horizontalAlignment = TextInput.AlignHCenter; break;
         default: data_field.horizontalAlignment = TextInput.AlignLeft; break;
@@ -70,6 +70,7 @@ Flow {
     Text {
         id: data_field
 
+        width: stacked? label_width : 20
         verticalAlignment: Text.AlignVCenter
         text: "unset data"
         font: Globals.data_font

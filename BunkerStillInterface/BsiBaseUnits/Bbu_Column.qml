@@ -1,5 +1,6 @@
-import QtQuick 2.0
+import QtQuick 2.15
 
 Column {
-    spacing: 6
+    spacing: 4
+    padding: 2
 }

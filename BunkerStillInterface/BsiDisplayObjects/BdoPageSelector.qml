@@ -15,11 +15,19 @@ ComboBox {
     property var page_folder: FolderListModel {
         id: page_folder
 
+        property var onReady: null
+
         folder: Putiljs.page_baseurl
         showDirs: false
         showOnlyReadable: true
         sortField: FolderListModel.Name
         nameFilters: ["NoFileMatchesThis"]  // filter is set when a still is selected
+
+        function refresh() {
+            // This forces page_folder to reload the files without affection list content.
+            // We do this to get the current file modified dates for Pager.
+            showDirs = !showDirs;
+        }
     }
 
     Component.onCompleted: {
@@ -43,7 +51,7 @@ ComboBox {
 
         let index = list.indexOf(requested_page);
         if (index < 0) {
-            log.addMessage("Error: requested page \"" + requested_page + "\" not available");
+            log.addMessage("(E) requested page \"" + requested_page + "\" not available");
             requested_page = "";  // Clear
             return;
         }
@@ -63,8 +71,15 @@ ComboBox {
 
         } else {
             // a dynamic page generated into the file system
-            current_page_file = [Putiljs.page_basepath + page_folder.get(index, "fileName"),
-                                 page_folder.get(index, "fileModified")];
+            page_folder.onReady = function() {
+                // Create the current_page_file value after we have latest file modified date.
+                if (page_folder.count) {
+                    current_page_file = [Putiljs.page_basepath + page_folder.get(index, "fileName"),
+                                         page_folder.get(index, "fileModified")];
+                    page_folder.onReady = null;
+                }
+            }
+            page_folder.refresh();
         }
     }
 
@@ -90,9 +105,6 @@ ComboBox {
             // The current page is no longer in the page folder
             currentIndex = 0;
             requested_page = editText;
-//            current_page = editText;
-//            current_page_file = [Putiljs.system_default_page_url,
-//                                 null];
         } else {
             currentIndex = index;
             if (index === 0 || index > page_folder.count) {
@@ -125,7 +137,11 @@ ComboBox {
         target: page_folder
         function onStatusChanged() {
             if (page_folder.status === FolderListModel.Ready) {
-                load_selector_choices();
+                if (page_folder.onReady) {
+                    page_folder.onReady();
+                } else {
+                    load_selector_choices();
+                }
             }
         }
     }

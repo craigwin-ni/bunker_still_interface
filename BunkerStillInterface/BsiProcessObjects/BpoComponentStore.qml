@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import "../BsiDisplayObjects"
 
-QtObject {  // why not QtObject?
+QtObject {
     id: componentStore
 
     property var component_sets: ({})
@@ -61,7 +61,7 @@ QtObject {  // why not QtObject?
                     break;
 
                 case "NUMBER":
-                    text = value.toPrecision(precision);
+                    text = value.toPrecision(prec);
                     break;
                 }
 

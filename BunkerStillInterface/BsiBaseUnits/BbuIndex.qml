@@ -8,7 +8,8 @@ QtObject {
             "description": "Row of page units",
             "base_unit_name": null,
             "datas": [],
-            "props": [],
+            "props": [["spacing", "<row_spacing>", "6"],
+                      ["padding", "<row_padding>", "2"]],
             "childs": []
         },
         "Column": {
@@ -16,7 +17,8 @@ QtObject {
             "description": "Column of page units",
             "base_unit_name": null,
             "datas": [],
-            "props": [],
+            "props": [["spacing", "<column_spacing>", "4"],
+                      ["padding", "<column_padding>", "2"]],
             "childs": []
         },
         "DataAsText": {
@@ -27,8 +29,8 @@ QtObject {
             "props": [
                 ["Slabel_field_text", "<label>", "Temperature"],
                 ["label_width", "<label_width>", "160"],
-                ["Slabel_align", "<label_align>", "\"left\", \"right\", \"center\""],
-                ["Sdata_align", "<data_align>", "\"left\", \"right\", \"center\""],
+                ["Slabel_align", "<label_align>", "left, right, center"],
+                ["Sdata_align", "<data_align>", "left, right, center"],
                 ["precision", "<precision>", "4"],
                 ["stacked", "<stacked>", "true"]
             ]
@@ -39,6 +41,13 @@ QtObject {
             "base_unit_name": null,
             "datas": [["enable_component", "<pid_enable>", "<some_pid_enable>"]],
             "props": []
+        },
+        "PidGauge": {
+            "name": "PidGauge",
+            "description": "Dual gauge tracking PID operation",
+            "base_unit_name": null,
+            "datas": [["enable_component", "<pid_enable>", "<some_pid_enable>"]],
+            "props": [["size", "<meter_size>", "150"]]
         },
         "GaugeBasic": {
             "name": "GaugeBasic",
@@ -51,16 +60,6 @@ QtObject {
                       ["min_range", "<min_range>", "5"],
             ]
         },
-        "Gauge":
-        {   "name": "Gauge",
-            "description": "Autoscaling general purpose circular gauge",
-            "base_unit_name": null,
-            "datas": [["data_component", "<data>", "<sump_temp>"]],
-            "props": [["center_scale", "<center_scale>", "60"],
-                      ["min_range", "<min_range>", "2"],
-                      ["size", "<meter_size>", "100"]
-            ]
-        },
         "GaugeHalf":
         {   "name": "GaugeHalf",
             "description": "Basic semi-circular gauge with optional autoscaling",
@@ -70,19 +69,7 @@ QtObject {
                       ["autoscale", "<autoscale>", "true/false"],
                       ["center_scale", "<center_scale>", "60"],
                       ["min_range", "<min_range>", "5"],
-                      ["size", "<meter_size>", "100"]
-            ]
-        },
-        "HalfGauge":
-        {   "name": "HalfGauge",
-            "description": "Autoscaling general purpose circular gauge",
-            "base_unit_name": null,
-            "datas": [["data_component", "<data>", "<sump_temp>"]],
-            "props": [["Shalf", "<gauge_half>", "left/right/top/bottom"],
-                      ["autoscale", "<autoscale>", "true/false"],
-                      ["center_scale", "<center_scale>", "60"],
-                      ["min_range", "<min_range>", "5"],
-                      ["size", "<meter_size>", "100"]
+                      ["size", "<meter_size>", "120"]
             ]
         },
         "WebView": {

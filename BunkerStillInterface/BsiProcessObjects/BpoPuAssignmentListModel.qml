@@ -30,7 +30,7 @@ ListModel {
     function update_assignment(standin, resolution) {
         for (let i_=0; i_<count; i_++) {
             let assignment = get(i_);
-            if (assignment.assignment_0 === standin) {
+            if (assignment.assignment_0 === standin) {  // XXX Why this constraint?
                 setProperty(i_, "assignment_1", resolution);  // list model (for display);
                 assignments[i_][1] = resolution;  // edited page unit (for ultimate save);
             }

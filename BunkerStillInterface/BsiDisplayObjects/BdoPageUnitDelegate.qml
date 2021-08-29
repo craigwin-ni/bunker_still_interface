@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.15
 import "../BsiProcessObjects"
 import "../javascript/page_editor.js" as Peditjs
 
@@ -16,9 +16,9 @@ Item {
         anchors.fill: parent
 
         BdoTextLabeledField {
-            label_width: 150
+            label_width: 190
             label_text: name + " (" + page_unit.base_unit_name + ")"
-            input_width: 200
+            input_width: 190
             input_text: page_unit.description
             read_only: true
         }

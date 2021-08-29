@@ -37,7 +37,6 @@ Column {
             if (!root_unit.resolutions[still]) root_unit.resolutions[still] = unresolved;
             Peditjs.mergeStandins(root_unit.resolutions[still].datas, unresolved.datas);
             Peditjs.mergeStandins(root_unit.resolutions[still].props, unresolved.props);
-//            console.log("PageGenerator resolutions: "+JSON.stringify(root_unit.resolutions[still], 0, 2));
             assignment_lists.assignments_owner = root_unit.resolutions[still];
         }
     }

@@ -32,13 +32,13 @@ ColumnLayout {
     }
 
     function init_editor() {
+        name_field.input_text = edit_unit.name;
         description_field.input_text = edit_unit.description;
         base_unit_selector.currentIndex = page_unit_model.bu_list.indexOf(edit_unit.base_unit_name);
         page_unit_selector.model = page_unit_model.pu_list;
         page_unit_selector.currentIndex = -1;
         child_listModel.page_unit = edit_unit;
         assignment_lists.assignments_owner = edit_unit;
-//        console.log("PageUnitEditor edit_unit: "+JSON.stringify(edit_unit, 0, 2));
     }
 
     function reenter_editor(next_page_unit_name) {
@@ -70,6 +70,7 @@ ColumnLayout {
     function do_save_as(name) {
         if (name) {
             // Note: edit session will now be editing newly saved page+_unit.
+            console.log("PageUnitEditor.do_save_as called with name '"+name+"'");
             edit_unit.name = name;
             name_field.input_text = name;
             page_unit_model.put_page_unit(edit_unit);
@@ -305,7 +306,6 @@ ColumnLayout {
 
         visible: false
 
-
         BdoTextLabeledField {
             id: save_as_name_field
 
@@ -329,6 +329,7 @@ ColumnLayout {
                         // check and show overwrite-dialog if save_as path exists
                         if (page_unit_model.pu_list.indexOf(name) >= 0) {
                             verify_overwrite_page_unit.open();
+                            // dialog.onAccepted() will do_save_as().
                             return;
                         }
                     }

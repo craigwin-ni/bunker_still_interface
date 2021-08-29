@@ -1,5 +1,4 @@
-import QtQuick 2.0
-
+import QtQuick 2.15
 
 Rectangle {
     property alias data_component: gauge.data_component // <sump_temp>
@@ -9,12 +8,20 @@ Rectangle {
     property alias min_range: gauge.min_range           // 2
     property alias half: gauge.half                     // left/right/top/bottom
 
+    property alias bg_color: bg_clipper.bg_draw_color
+    property alias gauge_min_value: gauge.gauge_min_value
+    property alias gauge_max_value: gauge.gauge_max_value
+    property alias dynamic_center: gauge.dynamic_center
+    property alias tick_count: gauge.tick_count
+
     width: (half==="left"||half==="right")? size/2 : size
     height: (half==="left"||half==="right")? size : size/2
 
     // background semi-circle
     Rectangle {
         id: bg_clipper
+
+        property alias bg_draw_color: bg_draw.color
 
         // this is the clipper rectangle and should match the top rectangle
         anchors.fill: parent
@@ -49,9 +56,6 @@ Rectangle {
         // min_range: _gauge.min_range         // 2
 
         // GaugeBasic is size x size.  We offset it and use the half at 0,0
-//        gauge_width: (half==="left"||half==="right")? size/2 : size
-//        gauge_height: (half==="left"||half==="right")? size : size/2
-
         x: (half==="right")? -size/2 : 0;
         y:  (half==="bottom")? -size/2 : 0;
         color: "transparent"

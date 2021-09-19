@@ -16,9 +16,34 @@ Window {
     title: qsTr("Bunker Distillation Systems")
 
     Component.onCompleted: {
-        connectionModel.loadConnections();
+//        console.log("Writable directory count (should be 3): "+writable_dir_count);
+        file_setup_timer.running = true;
     }
 
+    Timer {
+        id: file_setup_timer
+
+        property int iteration: 0
+        interval: 500
+
+        onTriggered: {
+            iteration += 1;
+            switch (iteration) {
+            case 1:
+                fileUtil.check_writable_dir();
+                running = true;
+                break;
+            case 2:
+                connectionModel.loadConnections();
+                running = true;
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
+    BpoFileUtil {id: fileUtil}
     BpoConnectionModel {id: connectionModel}
     BpoMqttClient {id: mqtt}
     BpoComponentStore {id: componentStore}

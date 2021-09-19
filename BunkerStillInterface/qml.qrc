@@ -59,5 +59,9 @@
         <file>BsiBaseUnits/Bbu_GaugeHalf.qml</file>
         <file>BsiBaseUnits/Bbu_PidGauge.qml</file>
         <file>BsiBaseUnits/BbuPidBase.qml</file>
+        <file>BsiProcessObjects/BpoFileUtil.qml</file>
+        <file>images/Still-5_index.png</file>
+        <file>BsiBaseUnits/Bbu_ImagePage.qml</file>
+        <file>BsiDisplayObjects/BdoTextAnnotation.qml</file>
     </qresource>
 </RCC>

@@ -5,6 +5,12 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QtWebView/QtWebView>
+#include <QQmlContext>
+
+#include <QDir>
+#include <QStandardPaths>
+
+int check_dirs();
 
 int main(int argc, char *argv[])
 {
@@ -30,7 +36,37 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
 
     engine.addImportPath(":/imports");
+
+    engine.rootContext()->setContextProperty(QStringLiteral("writable_dir_count"), check_dirs());
+
     engine.load(url);
 
     return app.exec();
+}
+
+int check_dirs()
+{
+    QString writablePath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
+    QDir writableDir(writablePath);
+    qDebug() << "Writable directory:" << writablePath;
+
+    if (!writableDir.exists()) {
+        qDebug() << "Path " << writablePath << "does not exist; will try to create.";
+        if (!writableDir.mkpath(".")) {
+            qDebug() << "Writable Path " << writablePath << "could not be created.";
+            return 0;
+        }
+    }
+
+    int retval = 1;
+
+    if (!writableDir.exists("pages")) writableDir.mkpath("pages");
+    if (writableDir.exists("pages")) ++retval;
+    else qDebug() << "'pages' directory could not be created.";
+
+    if (!writableDir.exists("page_units")) writableDir.mkpath("page_units");
+    if (writableDir.exists("pages")) ++retval;
+    else qDebug() << "'page_units' directory could not be created.";
+
+    return retval;
 }

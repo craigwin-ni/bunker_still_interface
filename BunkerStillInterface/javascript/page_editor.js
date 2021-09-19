@@ -1,6 +1,9 @@
 
 Qt.include("name_util.js");
 
+const writable_baseurl = StandardPaths.writableLocation(StandardPaths.AppDataLocation) + "/";
+const writable_basepath = writable_baseurl.slice(8);
+
 var base_unit_baseurl = "qrc:///BsiBaseUnits/";
 var base_unit_basepath = "BsiBaseUnits/";
 
@@ -28,8 +31,8 @@ function base_unit_name_from_file(bu_file) {
     return bu_file.substring(4, bu_file.length-5);
 }
 
-var page_unit_basepath = "BSI/page_units/";
-var page_unit_baseurl = "file:BSI/page_units/";
+const page_unit_basepath = writable_basepath + "page_units/";
+const page_unit_baseurl = writable_baseurl + "page_units/";
 
 function page_unit_file_from_name(pu_name) {
     return "Bpu_" + pu_name + ".json";
@@ -291,7 +294,7 @@ function scan_for_descendant(page_unit, descendant_name) {
     return false;
 }
 
-function pagegen(page_unit, resolution, page_name) {
+function pagegen(page_unit, resolution, page_name, annotations) {
     let page_text = "";
     let page_unit_model = pager.page_unit_model;
     if (!page_name) page_name = page_unit_name;
@@ -313,25 +316,23 @@ function pagegen(page_unit, resolution, page_name) {
 
     // Generate top of QML file.
     page_text = (" " + qml_file_head).slice(1);
-//    page_text += "Item {\n";
 
     // Recursively generate page contents
-    page_text += generate_unit(page_unit, resolution, 2);
+    page_text += generate_unit(page_unit, resolution, 2, annotations);
 
     // Generate bottom of QML file.
-//    page_text += "}\n\n// End of generated QML\n";
     page_text += "\n// End of generated QML\n";
 
     return page_text;
 }
 
-function generate_unit(page_unit, resolution, indent) {
+function generate_unit(page_unit, resolution, indent, annotations) {
     let page_text = "";
 
     // Resolve page_unit
     resolve_page_unit(page_unit, resolution);
 
-    // Get a copy of base unit and resolve it uning resolved page unit.
+    // Get a copy of base unit and resolve it using resolved page unit.
     let base_unit = page_unit_model.get_base_unit(page_unit.base_unit_name);
     resolve_page_unit(base_unit, page_unit);
 
@@ -340,11 +341,9 @@ function generate_unit(page_unit, resolution, indent) {
     indent += 2;
 
     var data, prop;
-//    if (base_unit.props.length + base_unit.datas.length) {
     if (base_unit.datas.length) {
         page_text += "\n" + " ".repeat(indent) + "Component.onCompleted: {\n";
         indent += 2;
-        page_text += " ".repeat(indent) + "//\n";
         page_text += " ".repeat(indent) + "// Data assignments\n";
         for (data of base_unit.datas) {
             page_text += " ".repeat(indent) + data[0]
@@ -354,7 +353,6 @@ function generate_unit(page_unit, resolution, indent) {
         page_text += " ".repeat(indent) + "}\n";
     }
     if (base_unit.props.length) {
-        page_text += " ".repeat(indent) + "//\n";
         page_text += " ".repeat(indent) + "// Property assignments\n";
         for (prop of base_unit.props) {
             if (prop[0].startsWith("S")) {
@@ -365,7 +363,6 @@ function generate_unit(page_unit, resolution, indent) {
             }
         }
     }
-//    }
 
     // Generate each child
     if (page_unit.childs) {
@@ -374,6 +371,11 @@ function generate_unit(page_unit, resolution, indent) {
             let child_unit = page_unit_model.get_page_unit(child.unit_name);
             page_text += generate_unit(child_unit, child, indent);
         }
+    }
+
+    // annotate unit
+    if (annotations) {
+        page_text += generate_annotations(annotations);
     }
 
     // Generate end of this unit
@@ -410,10 +412,27 @@ function resolve_page_unit(page_unit, resolution) {
     }
 }
 
+function generate_annotations(annotations) {
+    let text = "";
+    if (annotations) {
+        console.log("page_editor.pagegen annotating page");
+        text += "\n    //Annotations\n";
+        // generate annotation declarations here
+        for (let i=0; i<annotations.length; i++) {
+            let annobj = annotations[i];
+            text += "    BdoTextAnnotation {\n"
+                         +"    annobj: " + JSON.stringify(annobj, 0, 6)
+                         +"\n    }\n";
+        }
+    }
+    return text;
+}
+
 const qml_file_head = "// This file is generated from a page_unit.  Edits may be overwritten.\n"
                       + "import QtQuick 2.15\n"
 //                      + "import QtQuick.Controls 2.15\n"
                       + "import \"../BsiBaseUnits\"\n"
-//                      + "import \"../BsiDisplayObjects\"\n"
+                      + "import \"../BsiDisplayObjects\"\n"
 //                      + "import Bunker 1.0\n"
                       + "\n"
+                      ;

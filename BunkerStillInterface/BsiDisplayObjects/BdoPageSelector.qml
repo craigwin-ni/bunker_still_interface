@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import Qt.labs.folderlistmodel 2.15
+import Qt.labs.platform 1.1
 import Bunker 1.0
 
 import "../javascript/page_util.js" as Putiljs

@@ -36,16 +36,20 @@ QtObject {
         }
     }
 
-    function loadJson(path) {
+    function loadJson(path, file_optional) {
         var object;
         var e;
         jsonError = 0;
         jsonfile.set_path(path);
         let text = jsonfile.read();
         if (jsonfile.error) {
-            jsonErrorMsg = "Json read: " + jsonErrorMsg;
-            jsonError = 1;
-            return;
+            if (file_optional) {
+                return {};
+            } else {
+                jsonErrorMsg = "Json read: " + jsonErrorMsg;
+                jsonError = 1;
+                return;
+            }
         }
 
         try {

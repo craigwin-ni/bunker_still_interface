@@ -1,10 +1,12 @@
 import QtQuick 2.15
+import Qt.labs.platform 1.1
 import "../javascript/name_util.js" as Nutiljs
+import "../javascript/page_util.js" as Putiljs
 
 ListModel {
     id: connectionModel
 
-    property string connectionFile: "BSI/connections.json"
+    property string connectionFile: Putiljs.connections_file_path
 
     signal connectionsChanged(string name)
 

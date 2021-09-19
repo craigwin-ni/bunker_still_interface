@@ -29,7 +29,7 @@ function is_stand_in(s) {
 // Maybe: function test_name(name) returns 2 for standin, 1 for name, 0 for neither.
 
 function connection_name_transform(connection_name) {
-    new_name = connection_name.replace(/_/, "-");
+    let new_name = connection_name.replace(/_/, "-");
     if (new_name !== connection_name) {
         log.addMessage("(W) Connection name changed to '" + new_name + "' to eliminate underscore");
     }

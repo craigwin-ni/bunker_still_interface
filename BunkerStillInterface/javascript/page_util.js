@@ -1,6 +1,14 @@
 
-const page_basepath = "BSI/pages/";
-const page_baseurl = "file:BSI/pages/";
+const writable_baseurl = StandardPaths.writableLocation(StandardPaths.AppDataLocation) + "/";
+const writable_basepath = writable_baseurl.slice(8);
+
+const connections_file_name = "connections.json";
+const connections_file_path = writable_basepath + connections_file_name;
+const connections_file_url = writable_baseurl + connections_file_name;
+
+const page_basepath = writable_basepath + "pages/";
+const page_baseurl = writable_baseurl + "pages/";
+
 const system_page_baseurl = "qrc:/BsiSystemPages/";
 const system_default_page_file = "Bsp_Title.qml";
 const system_default_page_url = system_page_baseurl + system_default_page_file;

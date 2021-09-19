@@ -22,6 +22,8 @@ BbuPidBase {
     property real d_beta
     property var minCv
     property var maxCv
+    property bool show_data: false
+    property color background_color: "transparent"
 
     onMinCvChanged: {set_cv_scale();}
     onMaxCvChanged: {set_cv_scale();}
@@ -36,22 +38,22 @@ BbuPidBase {
         cv = cv_component.value;
         cv_field.input_text = cv_component.getValueText(6);
     }
-    function update_pvName() { pvName = pvName_component.value;}
-    function update_cvName() { cvName = cvName_component.value;}
+    function update_pvName() { pvName = pvName_component.value || 0;}
+    function update_cvName() { cvName = cvName_component.value || 0;}
     function update_sp() {
-        sp = sp_component.value;
+        sp = sp_component.value || 0;
         sp_field.input_text = sp_component.getValueText(6);
     }
     function update_i_term() {
-        i_term = i_term_component.value;
+        i_term = i_term_component.value || 0;
         i_term_field.input_text = i_term_component.getValueText(6);
     }
-    function update_p_gain() { p_gain = p_gain_component.value;}
-    function update_i_gain() { i_gain = i_gain_component.value;}
-    function update_d_gain() { d_gain = (d_gain)? d_gain_component.value:0;}
-    function update_d_beta() { d_beta = (d_beta)? d_beta_component.value:0;}
-    function update_minCv() { minCv = minCv_component.value;}
-    function update_maxCv() { maxCv = maxCv_component.value;}
+    function update_p_gain() { p_gain = p_gain_component.value || 0;}
+    function update_i_gain() { i_gain = i_gain_component.value || 0;}
+    function update_d_gain() { d_gain = d_gain_component.value || 0;}
+    function update_d_beta() { d_beta = d_beta_component.value || 0;}
+    function update_minCv() { minCv = minCv_component.value || 0;}
+    function update_maxCv() { maxCv = maxCv_component.value || 0;}
 //===================================================
     function set_cv_scale() {
         if (!Number.isFinite(minCv) || !Number.isFinite(maxCv)) return;
@@ -83,6 +85,13 @@ BbuPidBase {
 
     implicitWidth: pid_row.width
     implicitHeight: pid_row.height
+    Rectangle {
+        id: background
+        anchors.fill: parent
+        visible: background_color !== "transparent"
+        color: background_color
+    }
+
     Row {
         id: pid_row
 
@@ -101,8 +110,9 @@ BbuPidBase {
                 MouseArea {
                     anchors.fill:parent
                     onClicked: {
-                        text_column1.visible = !text_column1.visible;
-                        text_column2.visible = !text_column2.visible;
+                        show_data = !show_data;
+//                        text_column1.visible = !text_column1.visible;
+//                        text_column2.visible = !text_column2.visible;
                     }
                 }
 
@@ -262,7 +272,7 @@ BbuPidBase {
         Column {
             id: text_column1
 
-            visible: false
+            visible: show_data
 
             BdoTextField {
                 text: "Settings"
@@ -390,7 +400,7 @@ BbuPidBase {
         Column {
             id: text_column2
 
-            visible: false
+            visible: show_data
 
             BdoTextField {
                 text: "Data values"

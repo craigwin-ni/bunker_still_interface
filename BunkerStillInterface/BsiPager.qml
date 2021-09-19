@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import Qt.labs.platform 1.1
 import TextFile 1.0
 import Bunker 1.0
 
@@ -24,13 +25,16 @@ Rectangle {
     border.color: Globals.bulkTextBorderColor
     border.width: 2
 
-    ScrollView {
+    Flickable {
         id: page_scrollview
 
         clip: true
         anchors.fill: parent
         objectName: "pager-scrollview"
-        padding: 2
+        leftMargin: 2
+        rightMargin: 2
+        topMargin: 2
+        bottomMargin: 2
 
         contentWidth: current_page? Math.max(pager.width-4, current_page.implicitWidth) : pager.width-4;
         contentHeight: current_page? Math.max(pager.height-4, current_page.implicitHeight) : pager.height-4;

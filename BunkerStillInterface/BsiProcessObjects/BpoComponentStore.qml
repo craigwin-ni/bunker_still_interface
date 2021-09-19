@@ -120,15 +120,16 @@ QtObject {
     function get_component_names() {
         // return names ordered by group, display_order
 //        if (!compstore_state) return undefined;
+        if (!components) return [];
         let comps = Object.values(components)
         comps.sort(function(a, b) {
                 // compare group names
-                if (a.details.group < b.details.group) return -1;
-                if (a.details.group > b.details.group) return 1;
+                if (a.details.group || "Z" < b.details.group || "Z") return -1;
+                if (a.details.group || "Z" > b.details.group || "Z") return 1;
 
                 // a and b are in same group
-                if (a.details.display_order < b.details.display_order) return -1;
-                if (a.details.display_order > b.details.display_order) return 1;
+                if (a.details.display_order || 1e6 < b.details.display_order || 1e6) return -1;
+                if (a.details.display_order || 1e6 > b.details.display_order || 1e6) return 1;
 
                 // a is equal to b
                 return 0;
@@ -140,7 +141,9 @@ QtObject {
     function get_group_names() {
         // return list of group names in alpha-numeric sort order
         if (!compstore_state) return undefined;
-        let unique_group_names = [...new Set(Object.values(components).map(comp=>comp.details.group))];
+        if (!components) return [];
+        let unique_group_names = [...new Set(Object.values(components)
+                                             .map(comp=>(comp.details)? comp.details.group : ""))];
         unique_group_names.sort();
         return unique_group_names;
     }
@@ -148,6 +151,7 @@ QtObject {
     function get_grouped_component_names() {
         // return object keyed by group names containing group component ids in display order
 //        if (!compstore_state) return undefined;
+        if (!components) return {};
         let comp_names = get_component_names()
         var grouped_names = {};
         for (let name of comp_names) {

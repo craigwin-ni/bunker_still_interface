@@ -38,7 +38,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 target.path =  c:/Users/Craig/Dev-Qt/BSI/BSI_install/
 INSTALLS += target
 
-DISTFILES +=
+DISTFILES += \
+    android/gradle.properties \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew \
+    android/gradlew.bat
 
 android {
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

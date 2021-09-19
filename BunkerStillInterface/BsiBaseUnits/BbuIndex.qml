@@ -72,6 +72,14 @@ QtObject {
                       ["size", "<meter_size>", "120"]
             ]
         },
+        "ImagePage": {
+            "name": "ImagePage",
+            "description": "Image display unit",
+            "base_unit_name": null,
+            "datas": [],
+            "props": [["Simage_name", "<image_name>", "'abcd' (no extension)"]]
+        },
+
         "WebView": {
             "name": "WebView",
             "description": "Render a web url",

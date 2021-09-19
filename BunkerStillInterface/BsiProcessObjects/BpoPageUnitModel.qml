@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import Qt.labs.folderlistmodel 2.15
+import Qt.labs.platform 1.1
 import "../BsiBaseUnits"
 import "../BsiProcessObjects"
 import "../javascript/page_util.js" as Putiljs

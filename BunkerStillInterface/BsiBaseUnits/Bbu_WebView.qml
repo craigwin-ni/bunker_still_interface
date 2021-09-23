@@ -1,5 +1,5 @@
 import QtQuick 2.15
-import QtWebView 1.15
+//import QtWebView 1.15
 
 WebView {
     // set property url to the web page to be shown

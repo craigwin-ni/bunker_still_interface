@@ -17,6 +17,16 @@ Rectangle {
     Component.onCompleted: {
         precision = annobj.precision || 4;
         hover = annobj.hover || false;
+        if (componentStore.compstore_state) setup_annotations();
+    }
+    Connections {
+        target: componentStore
+        function onCompstore_stateChanged() {
+            setup_annotations();
+        }
+    }
+
+    function setup_annotations() {
         let anntype = annobj.pid_name? "pid" : "standard";
         if (anntype === "pid") setup_pid();
         else setup_standard();
@@ -83,8 +93,25 @@ Rectangle {
         return popup;
     }
 
-    x: annobj.x * parent.width
-    y: annobj.y * parent.height
+    function compute_annotation_x() {
+        let pinpoint = annobj.pinpoint || "TL";  // default to Top Left
+        let x_value = annobj.x * parent.width;
+        if (pinpoint[1] === "C") x_value -= width/2;
+        else if (pinpoint[1] === "R") x_value -= width;
+        return x_value;
+    }
+    function compute_annotation_y() {
+        let pinpoint = annobj.pinpoint || "TL";
+        let y_value = annobj.y * parent.height;
+        if (pinpoint[0] === "C") y_value -= height/2;
+        else if (pinpoint[0] === "B") y_value -= height;
+        return y_value;
+    }
+
+    x: compute_annotation_x()
+    y: compute_annotation_y()
+//    x: annobj.x * parent.width
+//    y: annobj.y * parent.height
     implicitWidth: label_text.width + data_text.width + 6
     implicitHeight: label_text.height
     color: "#b0FFFFFF"
@@ -100,10 +127,13 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent;
+        cursorShape: (annobj.pid_name || annobj.to_page) ? Qt.PointingHandCursor : Qt.ArrowCursor
         onClicked: {
             if (annobj.pid_name) {
                 if (!pid_popup) pid_popup = generate_pid_popup();
                 pid_popup.visible = true;
+            } else if (annobj.to_page) {
+                status_banner.requested_page = annobj.to_page;
             }
         }
     }

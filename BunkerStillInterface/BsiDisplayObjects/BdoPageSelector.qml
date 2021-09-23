@@ -150,7 +150,11 @@ ComboBox {
     Connections {
         target: status_banner
         function onConnected_stillChanged() {
-            page_folder.nameFilters = [Putiljs.page_file_from_name("*")]
+            page_folder.onReady = function() {
+                load_selector_choices();
+                if (model.indexOf("Index")>=0) requested_page = "Index";
+            }
+            page_folder.nameFilters = [Putiljs.page_file_from_name("*")];
         }
     }
 }

@@ -123,13 +123,17 @@ QtObject {
         if (!components) return [];
         let comps = Object.values(components)
         comps.sort(function(a, b) {
+                if (a.details && !b.details) return -1;
+                if (!a.details && b.details) return 1;
+                if (!a.details && !b.details) return 0;
+
                 // compare group names
-                if (a.details.group || "Z" < b.details.group || "Z") return -1;
-                if (a.details.group || "Z" > b.details.group || "Z") return 1;
+                if (a.details.group < b.details.group) return -1;
+                if (a.details.group > b.details.group) return 1;
 
                 // a and b are in same group
-                if (a.details.display_order || 1e6 < b.details.display_order || 1e6) return -1;
-                if (a.details.display_order || 1e6 > b.details.display_order || 1e6) return 1;
+                if ((a.details.display_order || 1e6) < (b.details.display_order || 1e6)) return -1;
+                if ((a.details.display_order || 1e6) > (b.details.display_order || 1e6)) return 1;
 
                 // a is equal to b
                 return 0;
@@ -143,7 +147,7 @@ QtObject {
         if (!compstore_state) return undefined;
         if (!components) return [];
         let unique_group_names = [...new Set(Object.values(components)
-                                             .map(comp=>(comp.details)? comp.details.group : ""))];
+                                             .map(comp=>(comp.details)? comp.details.group : "undefined"))];
         unique_group_names.sort();
         return unique_group_names;
     }
@@ -155,8 +159,9 @@ QtObject {
         let comp_names = get_component_names()
         var grouped_names = {};
         for (let name of comp_names) {
+            if (!name) continue;
             let component = components[name];
-            let group = component.details.group;
+            let group = component.details? component.details.group : "undefined";
             if (grouped_names[group] === undefined) grouped_names[group] = [];
             grouped_names[group].push(component.name);
         }
@@ -166,9 +171,11 @@ QtObject {
 
     function get_component(name) {
         if (!compstore_state) return null;
+        if (!name) return null;
         let comp = components[name];
         if (!comp) {
             comp = components[name] = component_proxy.createObject(main_window)
+            if (!comp.name) comp.name = name;
         }
         return components[name];
     }

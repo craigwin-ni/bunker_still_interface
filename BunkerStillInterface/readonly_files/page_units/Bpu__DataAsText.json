@@ -1,0 +1,44 @@
+{
+  "name": "_DataAsText",
+  "description": "Base unit instance",
+  "base_unit_name": "DataAsText",
+  "datas": [
+    [
+      "<data>",
+      "<data>",
+      "<sump_temp>"
+    ]
+  ],
+  "props": [
+    [
+      "<data_align>",
+      "<data_align>",
+      "left, right, center"
+    ],
+    [
+      "<label>",
+      "<label>",
+      "Temperature"
+    ],
+    [
+      "<label_align>",
+      "<label_align>",
+      "left, right, center"
+    ],
+    [
+      "<label_width>",
+      "<label_width>",
+      "160"
+    ],
+    [
+      "<precision>",
+      "<precision>",
+      "4"
+    ],
+    [
+      "<stacked>",
+      "<stacked>",
+      "true"
+    ]
+  ]
+}

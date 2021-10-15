@@ -1,0 +1,19 @@
+{
+  "name": "_PidGauge",
+  "description": "Base unit instance",
+  "base_unit_name": "PidGauge",
+  "datas": [
+    [
+      "<pid_enable>",
+      "<pid_enable>",
+      "<some_pid_enable>"
+    ]
+  ],
+  "props": [
+    [
+      "<meter_size>",
+      "<meter_size>",
+      "150"
+    ]
+  ]
+}

@@ -46,7 +46,7 @@ Column {
 
         Component {
             id: fileDelegate
-            Text { text: fileName }
+            Text { text: filePath }
         }
 
         model: folderModel

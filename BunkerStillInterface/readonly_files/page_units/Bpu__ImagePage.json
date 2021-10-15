@@ -1,0 +1,25 @@
+{
+  "name": "_ImagePage",
+  "description": "Base unit instance",
+  "base_unit_name": "ImagePage",
+  "datas": [],
+  "props": [
+    [
+      "<image_name>",
+      "<image_name>",
+      "'abcd' (no extension)"
+    ]
+  ],
+  "resolutions": {
+    "Still-5": {
+      "datas": [],
+      "props": [
+        [
+          "<image_name>",
+          "Still-5_index",
+          "'abcd' (no extension)"
+        ]
+      ]
+    }
+  }
+}

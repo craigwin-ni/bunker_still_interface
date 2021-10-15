@@ -31,12 +31,22 @@ function finishPageCreation() {
     if (prior_page) prior_page.visible = false;
     page.visible = true;
     pager.displayed_page = page_entry.file;
+    // XXX destroy page component?
 }
 
-function createPageFromQml(page_entry, prior_page, textio, page_parent) {
+function createPageFromQml(page_entry, prior_page, /*textio,*/ page_parent) {
     if (!page_parent) page_parent = page_display;
-    textio.set_path(page_entry.file);
-    let page_text = textio.read();
+//    textio.set_path(page_entry.file);
+//    let page_text = textio.read();
+    let page_text = fileUtil.get_dualfile(page_entry.file);
+    if (fileUtil.fileError) {
+        log.addMessage("(E) " + page_entry.page + ": " + fileUtil.fileErrorMsg);
+    }
+    if (!page_text) {
+        page_entry.page = null;
+        return;
+    }
+
     let page = Qt.createQmlObject(page_text, page_parent);
     if (!page) {
         log.addMessage("(E) Failed to create page '" + page_entry.name + "' from QML.");

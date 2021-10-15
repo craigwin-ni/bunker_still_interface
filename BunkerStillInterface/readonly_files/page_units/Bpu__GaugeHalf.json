@@ -1,0 +1,39 @@
+{
+  "name": "_GaugeHalf",
+  "description": "Base unit instance",
+  "base_unit_name": "GaugeHalf",
+  "datas": [
+    [
+      "<data>",
+      "<data>",
+      "<sump_temp>"
+    ]
+  ],
+  "props": [
+    [
+      "<autoscale>",
+      "<autoscale>",
+      "true/false"
+    ],
+    [
+      "<center_scale>",
+      "<center_scale>",
+      "60"
+    ],
+    [
+      "<gauge_half>",
+      "<gauge_half>",
+      "left/right/top/bottom"
+    ],
+    [
+      "<meter_size>",
+      "<meter_size>",
+      "100"
+    ],
+    [
+      "<min_range>",
+      "<min_range>",
+      "5"
+    ]
+  ]
+}

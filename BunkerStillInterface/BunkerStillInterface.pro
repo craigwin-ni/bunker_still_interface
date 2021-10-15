@@ -14,7 +14,8 @@ HEADERS += \
         qmlmqttclient.h \
         qmltextfile.h
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc \
+    readonly.qrc
 
 ## Additional import path used to resolve QML modules in Qt Creator's code model
 #QML_IMPORT_PATH = ./BsiDisplayObjects ./BsiProcessObjects ./BsiSystemPages

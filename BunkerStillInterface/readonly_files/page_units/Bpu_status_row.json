@@ -1,0 +1,332 @@
+{
+  "name": "status_row",
+  "description": "Status banner data",
+  "base_unit_name": "Row",
+  "datas": [],
+  "props": [
+    [
+      "<row_padding>",
+      "1",
+      "2"
+    ],
+    [
+      "<row_spacing>",
+      "3",
+      "6"
+    ]
+  ],
+  "childs": [
+    {
+      "unit_name": "_DataAsText",
+      "datas": [
+        [
+          "<data>",
+          "<data1>",
+          "<sump_temp>"
+        ]
+      ],
+      "props": [
+        [
+          "<data_align>",
+          "<data_align>",
+          "left, right, center"
+        ],
+        [
+          "<label>",
+          "<label1>",
+          "Temperature"
+        ],
+        [
+          "<label_align>",
+          "<label_align>",
+          "left, right, center"
+        ],
+        [
+          "<label_width>",
+          "<label_width>",
+          "160"
+        ],
+        [
+          "<precision>",
+          "<precision>",
+          "4"
+        ],
+        [
+          "<stacked>",
+          "<stacked>",
+          "true"
+        ]
+      ]
+    },
+    {
+      "unit_name": "_DataAsText",
+      "datas": [
+        [
+          "<data>",
+          "<data2>",
+          "<sump_temp>"
+        ]
+      ],
+      "props": [
+        [
+          "<data_align>",
+          "<data_align>",
+          "left, right, center"
+        ],
+        [
+          "<label>",
+          "<label2>",
+          "Temperature"
+        ],
+        [
+          "<label_align>",
+          "<label_align>",
+          "left, right, center"
+        ],
+        [
+          "<label_width>",
+          "<label_width>",
+          "160"
+        ],
+        [
+          "<precision>",
+          "<precision>",
+          "4"
+        ],
+        [
+          "<stacked>",
+          "<stacked>",
+          "true"
+        ]
+      ]
+    },
+    {
+      "unit_name": "_DataAsText",
+      "datas": [
+        [
+          "<data>",
+          "<data3>",
+          "<sump_temp>"
+        ]
+      ],
+      "props": [
+        [
+          "<data_align>",
+          "<data_align>",
+          "left, right, center"
+        ],
+        [
+          "<label>",
+          "<label3>",
+          "Temperature"
+        ],
+        [
+          "<label_align>",
+          "<label_align>",
+          "left, right, center"
+        ],
+        [
+          "<label_width>",
+          "<label_width>",
+          "160"
+        ],
+        [
+          "<precision>",
+          "<precision>",
+          "4"
+        ],
+        [
+          "<stacked>",
+          "<stacked>",
+          "true"
+        ]
+      ]
+    },
+    {
+      "unit_name": "_DataAsText",
+      "datas": [
+        [
+          "<data>",
+          "<data4>",
+          "<sump_temp>"
+        ]
+      ],
+      "props": [
+        [
+          "<data_align>",
+          "<data_align>",
+          "left, right, center"
+        ],
+        [
+          "<label>",
+          "<label4>",
+          "Temperature"
+        ],
+        [
+          "<label_align>",
+          "<label_align>",
+          "left, right, center"
+        ],
+        [
+          "<label_width>",
+          "<label_width>",
+          "160"
+        ],
+        [
+          "<precision>",
+          "<precision>",
+          "4"
+        ],
+        [
+          "<stacked>",
+          "<stacked>",
+          "true"
+        ]
+      ]
+    }
+  ],
+  "resolutions": {
+    "Still-5": {
+      "datas": [
+        [
+          "<data1>",
+          "run_mode",
+          "<sump_temp>"
+        ],
+        [
+          "<data2>",
+          "sump_temp",
+          "<sump_temp>"
+        ],
+        [
+          "<data3>",
+          "middle_draw_temp",
+          "<sump_temp>"
+        ],
+        [
+          "<data4>",
+          "stillhead_temp",
+          "<sump_temp>"
+        ]
+      ],
+      "props": [
+        [
+          "<data_align>",
+          "center",
+          "\"left\", \"right\", \"center\""
+        ],
+        [
+          "<label1>",
+          "mode",
+          "Temperature"
+        ],
+        [
+          "<label2>",
+          "sump",
+          "Temperature"
+        ],
+        [
+          "<label3>",
+          "hearts",
+          "Temperature"
+        ],
+        [
+          "<label4>",
+          "top",
+          "Temperature"
+        ],
+        [
+          "<label_align>",
+          "center",
+          "\"left\", \"right\", \"center\""
+        ],
+        [
+          "<label_width>",
+          "45",
+          "160"
+        ],
+        [
+          "<precision>",
+          "2",
+          "4"
+        ],
+        [
+          "<stacked>",
+          "true",
+          "true"
+        ]
+      ]
+    },
+    "Still-6": {
+      "datas": [
+        [
+          "<data1>",
+          "run_mode",
+          "<sump_temp>"
+        ],
+        [
+          "<data2>",
+          "upper_draw_temp",
+          "<sump_temp>"
+        ],
+        [
+          "<data3>",
+          "lower_draw_temp",
+          "<sump_temp>"
+        ],
+        [
+          "<data4>",
+          "sump_temp",
+          "<sump_temp>"
+        ]
+      ],
+      "props": [
+        [
+          "<data_align>",
+          "center",
+          "left, right, center"
+        ],
+        [
+          "<label1>",
+          "mode",
+          "Temperature"
+        ],
+        [
+          "<label2>",
+          "heads",
+          "Temperature"
+        ],
+        [
+          "<label3>",
+          "hearts",
+          "Temperature"
+        ],
+        [
+          "<label4>",
+          "sump",
+          "Temperature"
+        ],
+        [
+          "<label_align>",
+          "center",
+          "left, right, center"
+        ],
+        [
+          "<label_width>",
+          "50",
+          "160"
+        ],
+        [
+          "<precision>",
+          "4",
+          "4"
+        ],
+        [
+          "<stacked>",
+          "true",
+          "true"
+        ]
+      ]
+    }
+  }
+}

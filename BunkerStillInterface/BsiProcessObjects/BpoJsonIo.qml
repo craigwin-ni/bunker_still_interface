@@ -6,17 +6,17 @@ QtObject {
     property int jsonError: 0
     property string jsonErrorMsg: ""
 
-    property var jsonfile: TextFile {
-        id: jsonfile
+//    property var jsonfile: TextFile {
+//        id: jsonfile
 
-        onErrorChanged: {
-            jsonErrorMsg = jsonfile.error_msg(errnum);
-        }
-    }
+//        onErrorChanged: {
+//            jsonErrorMsg = jsonfile.error_msg(errnum);
+//        }
+//    }
 
-    function storeJson(path, object) {
+    function storeJson(subpath, object) {
         jsonError = 0;
-        jsonfile.set_path(path);
+//        jsonfile.set_path(path);
         var e;
         var text;
         try {
@@ -28,25 +28,29 @@ QtObject {
             return;
         }
 
-        jsonfile.write(text);
-        if (jsonfile.error) {
-            jsonErrorMsg = "Json write: " + jsonErrorMsg;
+//        jsonfile.write(text);
+//        if (jsonfile.error) {
+        fileUtil.put_writable_file(subpath, text);
+        if (fileUtil.fileError) {
+            jsonErrorMsg = "Json write: " + fileUtil.fileErrorMsg;
             jsonError = 1;
             return;
         }
     }
 
-    function loadJson(path, file_optional) {
+    function loadJson(subpath, file_optional) {
         var object;
         var e;
         jsonError = 0;
-        jsonfile.set_path(path);
-        let text = jsonfile.read();
-        if (jsonfile.error) {
+
+        let text = fileUtil.get_dualfile(subpath);  // where do we call loadJson???
+//        jsonfile.set_path(path);
+//        let text = jsonfile.read();
+        if (fileUtil.fileError) {
             if (file_optional) {
                 return {};
             } else {
-                jsonErrorMsg = "Json read: " + jsonErrorMsg;
+                jsonErrorMsg = "Json read: " + fileUtil.fileErrorMsg;
                 jsonError = 1;
                 return;
             }
@@ -64,10 +68,11 @@ QtObject {
         return object;
     }
 
-    function removeJson(path) {
+    function removeJson(subpath) {
         jsonError = 0;
-        jsonfile.set_path(path);
-        if (!jsonfile.remove()) {
+//        jsonfile.set_path(path);
+//        if (!jsonfile.remove()) {
+        if (fileUtil.remove_writable_file(subpath)) {
             jsonErrorMsg = "Json could not remove file " + path;
             jsonError = 4;
         }

@@ -1,0 +1,13 @@
+{
+  "name": "_PidText",
+  "description": "Base unit instance",
+  "base_unit_name": "PidText",
+  "datas": [
+    [
+      "<pid_enable>",
+      "<pid_enable>",
+      "<some_pid_enable>"
+    ]
+  ],
+  "props": []
+}

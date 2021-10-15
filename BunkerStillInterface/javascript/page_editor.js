@@ -1,54 +1,56 @@
+.import "path_util.js" as Pathjs
+.import "name_util.js" as Namejs
+//Qt.include("name_util.js");
 
-Qt.include("name_util.js");
+//const writable_basepath = writable_path + "/";
+//const writable_baseurl = "file:" + writable_basepath;
 
-const writable_baseurl = StandardPaths.writableLocation(StandardPaths.AppDataLocation) + "/";
-const writable_basepath = writable_baseurl.slice(8);
+//var base_unit_baseurl = "qrc:///BsiBaseUnits/";
+//var base_unit_basepath = "BsiBaseUnits/";
 
-var base_unit_baseurl = "qrc:///BsiBaseUnits/";
-var base_unit_basepath = "BsiBaseUnits/";
+//function base_unit_component_from_name(bu_name) {
+//    return "Bbu_" + bu_name;
+//}
 
-function base_unit_component_from_name(bu_name) {
-    return "Bbu_" + bu_name;
-}
+//function base_unit_file_from_name(bu_name) {
+//    return "Bbu_" + bu_name + ".qml";
+//}
 
-function base_unit_file_from_name(bu_name) {
-    return "Bbu_" + bu_name + ".qml";
-}
+//function base_unit_url_from_name(bu_name) {
+//    return base_unit_baseurl + base_unit_file_from_name(bu_name);
+//}
 
-function base_unit_url_from_name(bu_name) {
-    return base_unit_baseurl + base_unit_file_from_name(bu_name);
-}
+//function base_unit_path_from_name(bu_name) {
+//    return base_unit_basepath + base_unit_file_from_name(bu_name);
+//}
 
-function base_unit_path_from_name(bu_name) {
-    return base_unit_basepath + base_unit_file_from_name(bu_name);
-}
+//function base_unit_name_from_file(bu_file) {
+//    return bu_file.substring(4, bu_file.length-5);
+//}
 
-function base_unit_type_from_name(bu_name) {
-    return "Bbu_" + bu_name;
-}
+//const page_unit_subpath = "page_units/";
+//const page_unit_basepath = writable_basepath + page_unit_subpath;
+//const page_unit_baseurl = writable_baseurl + page_unit_subpath;
 
-function base_unit_name_from_file(bu_file) {
-    return bu_file.substring(4, bu_file.length-5);
-}
+//function page_unit_file_from_name(pu_name) {
+//    return "Bpu_" + pu_name + ".json";
+//}
 
-const page_unit_basepath = writable_basepath + "page_units/";
-const page_unit_baseurl = writable_baseurl + "page_units/";
+//function page_unit_subpath_from_name(pu_name) {
+//    return page_unit_subpath + page_unit_file_from_name(pu_name);
+//}
 
-function page_unit_file_from_name(pu_name) {
-    return "Bpu_" + pu_name + ".json";
-}
+//function page_unit_path_from_name(pu_name) {
+//    return page_unit_basepath + page_unit_file_from_name(pu_name);
+//}
 
-function page_unit_path_from_name(pu_name) {
-    return page_unit_basepath + page_unit_file_from_name(pu_name);
-}
+//function page_unit_url_from_name(pu_name) {
+//    return page_unit_baseurl + page_unit_file_from_name(pu_name);
+//}
 
-function page_unit_url_from_name(pu_name) {
-    return page_unit_baseurl + page_unit_file_from_name(pu_name);
-}
-
-function page_unit_name_from_file(pu_file) {
-    return pu_file.substring(4, pu_file.length-5);
-}
+//function page_unit_name_from_file(pu_file) {
+//    return pu_file.substring(4, pu_file.length-5);
+//}
 
 function blank_page_unit() {
     // page_unit is {"name": <page_unit_name>,
@@ -181,7 +183,7 @@ function _extract_standins(assignments, assignments_dict) {
     var i_assignment
     for (i_assignment=0; i_assignment<assignments.length; i_assignment++) {
         let candidate = assignments[i_assignment][1];
-        if (is_stand_in(candidate)) {
+        if (Namejs.is_stand_in(candidate)) {
             if (assignments_dict[candidate] === undefined) {
                 assignments_dict[candidate] = assignments[i_assignment].slice(1,3);
             }
@@ -305,7 +307,7 @@ function pagegen(page_unit, resolution, page_name, annotations) {
     let errors = 0;
     for (let section of ["datas", "props"]) {
         for (i_resolution=0; i_resolution<resolution[section].length; i_resolution++) {
-            if (is_stand_in(resolution[section][i_resolution][1])) {
+            if (Namejs.is_stand_in(resolution[section][i_resolution][1])) {
                 log.addMessage("(E) Standin '" + resolution[section][i_resolution][0]
                                + "' is not resolved.");
                 errors += 1;
@@ -337,7 +339,9 @@ function generate_unit(page_unit, resolution, indent, annotations) {
     resolve_page_unit(base_unit, page_unit);
 
     // Generate top of this unit.
-    page_text += " ".repeat(indent) + base_unit_component_from_name(page_unit.base_unit_name) + " {\n";
+    page_text += " ".repeat(indent) +
+                 Pathjs.base_unit_component_from_name(page_unit.base_unit_name) +
+                 " {\n";
     indent += 2;
 
     var data, prop;

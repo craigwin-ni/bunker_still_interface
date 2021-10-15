@@ -10,6 +10,7 @@ Rectangle {
     property string labels: ""
     property var data_components: []
     property bool update_required: true
+    property bool annotation_ready: false
 
     property var pid_popup: null
     property string popup_text: ""
@@ -27,10 +28,12 @@ Rectangle {
     }
 
     function setup_annotations() {
+        if (annotation_ready) return;
         let anntype = annobj.pid_name? "pid" : "standard";
         if (anntype === "pid") setup_pid();
         else setup_standard();
         update_timer.start();
+        annotation_ready = true;
     }
     function setup_standard() {
         let display_list = annobj.display_list;
@@ -38,6 +41,7 @@ Rectangle {
             if (i) labels += "\n";
             labels += display_list[i][0];
             let data_component = componentStore.get_component(display_list[i][1]);
+            if (!data_component) continue;
             data_components.push(data_component);
             data_component.onValueChanged.connect(set_update_flag);
         }
@@ -47,6 +51,7 @@ Rectangle {
         labels = "enable\nSP\nPV\nCV";
         for (let suffix of ["_enable", "_set_point", "_process_value", "_control_value"]) {
             let data_component = componentStore.get_component(pid_name+suffix);
+            if (!data_component) continue;
             data_components.push(data_component);
             data_component.onValueChanged.connect(set_update_flag);
         }
@@ -54,7 +59,7 @@ Rectangle {
                     +"Bbu_PidGauge {\nid: gauge\n"
                     +"x:annotation_rect.x>parent.width/2?parent.width-width-20:20\n"
                     +"y:annotation_rect.y>250?annotation_rect.y-240:annotation_rect.y+annotation_rect.height+10\n"
-                    +"z:1\nsize: 150\nshow_data:true\nbackground_color:\"#f0ffffff\"\n"
+                    +"z:1\nsize: 150\nshow_data:true\nbackground_color:\"#f0f0f0ff\"\n"
                     +"Component.onCompleted: {enable_component = componentStore.get_component(\""
                     +pid_name+"_enable\");}\n"
                     +"MouseArea {\nanchors.fill: parent\ndrag.target: gauge\n"
@@ -110,11 +115,9 @@ Rectangle {
 
     x: compute_annotation_x()
     y: compute_annotation_y()
-//    x: annobj.x * parent.width
-//    y: annobj.y * parent.height
     implicitWidth: label_text.width + data_text.width + 6
     implicitHeight: label_text.height
-    color: "#b0FFFFFF"
+    color: "#90FFFFFF"
 
     Text {
         id: label_text

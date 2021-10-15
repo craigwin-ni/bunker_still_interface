@@ -4,8 +4,8 @@ import Qt.labs.platform 1.1
 import TextFile 1.0
 import "../BsiDisplayObjects"
 import "../BsiProcessObjects"
+import "../javascript/path_util.js" as Pathjs
 import "../javascript/page_editor.js" as Peditjs
-import "../javascript/page_util.js" as Putiljs
 
 Column {
     id: page_generator
@@ -55,13 +55,13 @@ Column {
             }
         }
         if (image_name) {
-            let annotation_path = Putiljs.writable_basepath + "annotations/" + image_name + ".json";
-            annotations = jsonIo.loadJson(annotation_path, false);
+            let annotation_subpath = "annotations/" + image_name + ".json";
+            annotations = jsonIo.loadJson(annotation_subpath, false);
             if (jsonIo.jsonError && jsonIo.jsonError != 5) {
                 log.addMessage("(E) Image annotations: "+jsonIo.jsonErrorMsg);
             }
 
-            console.log("PageGenerator.check_for_annotated_image path="+annotation_path
+            console.log("PageGenerator.check_for_annotated_image path="+annotation_subpath
                         +"\nannotations="+JSON.stringify(annotations, 0, 2));
             console.log("       error msg: "+jsonIo.jsonErrorMsg);
         } else {
@@ -113,11 +113,12 @@ Column {
                 if (!page_text) return;
 
                 // save page text in pages folder.
-                pagefile.path = Putiljs.page_path_from_name(page_name);
-                if (!pagefile.path) return;
-                pagefile.write(page_text);
-                if (pagefile.error) return;
+                fileUtil.put_writable_file(Pathjs.page_subpath_from_name(page_name), page_text);
 
+//                pagefile.path = Pathjs.page_subpath_from_name(page_name);
+//                if (!pagefile.path) return;
+//                pagefile.write(page_text);
+//                if (pagefile.error) return;
 
                 status_banner.requested_page = "Edit Pages";
             }

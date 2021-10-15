@@ -3,3 +3,6 @@ build-BSI-*
 BSI_install
 android
 graphics_work
+writable_files
+*.exe
+*.apk

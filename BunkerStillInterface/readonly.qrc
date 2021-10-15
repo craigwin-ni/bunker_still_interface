@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>readonly_files/annotations/Still-5_index.json</file>
+        <file>readonly_files/page_units/Bpu__DataAsText.json</file>
+        <file>readonly_files/page_units/Bpu__GaugeBasic.json</file>
+        <file>readonly_files/page_units/Bpu__GaugeHalf.json</file>
+        <file>readonly_files/page_units/Bpu__ImagePage.json</file>
+        <file>readonly_files/page_units/Bpu__PidGauge.json</file>
+        <file>readonly_files/page_units/Bpu__PidText.json</file>
+        <file>readonly_files/page_units/Bpu_cooling.json</file>
+        <file>readonly_files/page_units/Bpu_Index.json</file>
+        <file>readonly_files/page_units/Bpu_pid_stack.json</file>
+        <file>readonly_files/page_units/Bpu_status_row.json</file>
+        <file>readonly_files/pages/BdpStill-5_cooling.qml</file>
+        <file>readonly_files/pages/BdpStill-5_Index.qml</file>
+        <file>readonly_files/pages/BdpStill-5_pid_stack.qml</file>
+        <file>readonly_files/pages/BdpStill-5_status_row.qml</file>
+        <file>readonly_files/connections.json</file>
+    </qresource>
+</RCC>

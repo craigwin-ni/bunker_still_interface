@@ -80,7 +80,8 @@ QtObject {
             log.addMessage("BsiComponentStore connected.")
 
             // set up component storage for this still
-            let still = status_banner.connected_still
+//            let still = status_banner.connected_still
+            let still = mqtt.connection.name
             if (!still) {
                 components = null
             } else {

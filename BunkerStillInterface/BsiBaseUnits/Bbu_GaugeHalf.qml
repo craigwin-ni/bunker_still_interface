@@ -65,14 +65,14 @@ Rectangle {
 
         Component.onCompleted: {
             if (half==="left") {
-                start_angle = 0;
-                end_angle = -180;
+                start_angle = -180;
+                end_angle = 0;
             } else if (half==="top") {
                 start_angle = -90;
                 end_angle = 90;
             } else if (half==="right") {
-                start_angle = 0;
-                end_angle = 180;
+                start_angle = 180;
+                end_angle = 0;
             } else {
                 start_angle = 270;
                 end_angle = 90;

@@ -23,8 +23,8 @@ Rectangle {
         page_image.height = page_image.implicitHeight
     }
     function view_full_image() {
-        let scale = Math.min(page_scrollview.width / page_image.implicitWidth,
-                             page_scrollview.height / page_image.implicitHeight);
+        let scale = Math.min(page_view.width / page_image.implicitWidth,
+                             page_view.height / page_image.implicitHeight);
         page_image.width = page_image.implicitWidth * scale;
         page_image.height = page_image.implicitHeight * scale;
     }
@@ -59,15 +59,15 @@ Rectangle {
 
         Text {
             id: location_text
-            x: page_scrollview.contentX+30
-            y: page_scrollview.contentY+2
+            x: page_view.contentX+30
+            y: page_view.contentY+2
         }
 
     }
 
     Column {
-        x: page_scrollview.contentX+2
-        y: page_scrollview.contentY+2
+        x: page_view.contentX+2
+        y: page_view.contentY+2
 
         BdoButton_Letter {
             id: zoom_in

@@ -1,0 +1,375 @@
+{
+  "name": "cooling",
+  "description": "cooling system ops",
+  "base_unit_name": "Row",
+  "datas": [],
+  "props": [
+    [
+      "<row_padding>",
+      "<row_padding>",
+      "2"
+    ],
+    [
+      "<row_spacing>",
+      "<row_spacing>",
+      "6"
+    ]
+  ],
+  "childs": [
+    {
+      "unit_name": "_GaugeHalf",
+      "datas": [
+        [
+          "<data>",
+          "<Ldata>",
+          "<sump_temp>"
+        ]
+      ],
+      "props": [
+        [
+          "<autoscale>",
+          "<autoscale>",
+          "true/false"
+        ],
+        [
+          "<center_scale>",
+          "<center_scale>",
+          "60"
+        ],
+        [
+          "<gauge_half>",
+          "left",
+          "left/right/top/bottom"
+        ],
+        [
+          "<meter_size>",
+          "<meter_size>",
+          "100"
+        ],
+        [
+          "<min_range>",
+          "<min_range>",
+          "5"
+        ]
+      ]
+    },
+    {
+      "unit_name": "_GaugeHalf",
+      "datas": [
+        [
+          "<data>",
+          "<Rdata>",
+          "<sump_temp>"
+        ]
+      ],
+      "props": [
+        [
+          "<autoscale>",
+          "<autoscale>",
+          "true/false"
+        ],
+        [
+          "<center_scale>",
+          "<center_scale>",
+          "60"
+        ],
+        [
+          "<gauge_half>",
+          "right",
+          "left/right/top/bottom"
+        ],
+        [
+          "<meter_size>",
+          "<meter_size>",
+          "100"
+        ],
+        [
+          "<min_range>",
+          "<min_range>",
+          "5"
+        ]
+      ]
+    },
+    {
+      "unit_name": "_DataAsText",
+      "datas": [
+        [
+          "<data>",
+          "<data1>",
+          "<sump_temp>"
+        ]
+      ],
+      "props": [
+        [
+          "<data_align>",
+          "<data_align>",
+          "left, right, center"
+        ],
+        [
+          "<label>",
+          "<label1>",
+          "Temperature"
+        ],
+        [
+          "<label_align>",
+          "<label_align>",
+          "left, right, center"
+        ],
+        [
+          "<label_width>",
+          "<label_width>",
+          "160"
+        ],
+        [
+          "<precision>",
+          "<precision>",
+          "4"
+        ],
+        [
+          "<stacked>",
+          "<stacked>",
+          "true"
+        ]
+      ]
+    },
+    {
+      "unit_name": "_DataAsText",
+      "datas": [
+        [
+          "<data>",
+          "<data2>",
+          "<sump_temp>"
+        ]
+      ],
+      "props": [
+        [
+          "<data_align>",
+          "<data_align>",
+          "left, right, center"
+        ],
+        [
+          "<label>",
+          "<label2>",
+          "Temperature"
+        ],
+        [
+          "<label_align>",
+          "<label_align>",
+          "left, right, center"
+        ],
+        [
+          "<label_width>",
+          "<label_width>",
+          "160"
+        ],
+        [
+          "<precision>",
+          "<precision>",
+          "4"
+        ],
+        [
+          "<stacked>",
+          "<stacked>",
+          "true"
+        ]
+      ]
+    },
+    {
+      "unit_name": "_DataAsText",
+      "datas": [
+        [
+          "<data>",
+          "<data3>",
+          "<sump_temp>"
+        ]
+      ],
+      "props": [
+        [
+          "<data_align>",
+          "<data_align>",
+          "left, right, center"
+        ],
+        [
+          "<label>",
+          "<label3>",
+          "Temperature"
+        ],
+        [
+          "<label_align>",
+          "<label_align>",
+          "left, right, center"
+        ],
+        [
+          "<label_width>",
+          "<label_width>",
+          "160"
+        ],
+        [
+          "<precision>",
+          "<precision>",
+          "4"
+        ],
+        [
+          "<stacked>",
+          "<stacked>",
+          "true"
+        ]
+      ]
+    },
+    {
+      "unit_name": "_DataAsText",
+      "datas": [
+        [
+          "<data>",
+          "<data4>",
+          "<sump_temp>"
+        ]
+      ],
+      "props": [
+        [
+          "<data_align>",
+          "<data_align>",
+          "left, right, center"
+        ],
+        [
+          "<label>",
+          "<label4>",
+          "Temperature"
+        ],
+        [
+          "<label_align>",
+          "<label_align>",
+          "left, right, center"
+        ],
+        [
+          "<label_width>",
+          "<label_width>",
+          "160"
+        ],
+        [
+          "<precision>",
+          "<precision>",
+          "4"
+        ],
+        [
+          "<stacked>",
+          "<stacked>",
+          "true"
+        ]
+      ]
+    }
+  ],
+  "resolutions": {
+    "Still-5": {
+      "datas": [
+        [
+          "<Ldata>",
+          "column_water_exit_temp",
+          "<sump_temp>"
+        ],
+        [
+          "<Rdata>",
+          "water_heater_input_temp",
+          "<sump_temp>"
+        ],
+        [
+          "<data1>",
+          "water_heater_input_temp",
+          "<sump_temp>"
+        ],
+        [
+          "<data2>",
+          "upper_bypass_temp",
+          "<sump_temp>"
+        ],
+        [
+          "<data3>",
+          "column_water_exit_temp",
+          "<sump_temp>"
+        ],
+        [
+          "<data4>",
+          "circulation_pump_output",
+          "<sump_temp>"
+        ]
+      ],
+      "props": [
+        [
+          "<autoscale>",
+          "false",
+          "true/false"
+        ],
+        [
+          "<center_scale>",
+          "50",
+          "60"
+        ],
+        [
+          "<data_align>",
+          "center",
+          "left, right, center"
+        ],
+        [
+          "<label1>",
+          "cool side",
+          "Temperature"
+        ],
+        [
+          "<label2>",
+          "bypass",
+          "Temperature"
+        ],
+        [
+          "<label3>",
+          "hot side",
+          "Temperature"
+        ],
+        [
+          "<label4>",
+          "pump pwr",
+          "Temperature"
+        ],
+        [
+          "<label_align>",
+          "center",
+          "left, right, center"
+        ],
+        [
+          "<label_width>",
+          "80",
+          "160"
+        ],
+        [
+          "<meter_size>",
+          "120",
+          "100"
+        ],
+        [
+          "<min_range>",
+          "80",
+          "5"
+        ],
+        [
+          "<precision>",
+          "4",
+          "4"
+        ],
+        [
+          "<row_padding>",
+          "2",
+          "2"
+        ],
+        [
+          "<row_spacing>",
+          "2",
+          "6"
+        ],
+        [
+          "<stacked>",
+          "true",
+          "true"
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "Still-5": {
+    "password": "",
+    "user": "admin",
+    "port": 1883,
+    "address": "192.168.0.202",
+    "name": "Still-5"
+  },
+  "Still-6": {
+    "password": "",
+    "user": "admin",
+    "port": 1883,
+    "address": "192.168.0.205",
+    "name": "Still-6"
+  },
+  "Stillsim": {
+    "password": "",
+    "user": "admin",
+    "port": 1883,
+    "address": "127.0.0.1",
+    "name": "Stillsim"
+  }
+}

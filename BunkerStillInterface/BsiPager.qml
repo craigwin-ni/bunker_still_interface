@@ -2,11 +2,11 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import Qt.labs.platform 1.1
-import TextFile 1.0
+//import TextFile 1.0
 import Bunker 1.0
 
 import "javascript/page_creator.js" as PageCreator
-import "javascript/page_util.js" as Putiljs
+import "javascript/path_util.js" as Pathjs
 
 Rectangle {
     id: pager
@@ -26,7 +26,7 @@ Rectangle {
     border.width: 2
 
     Flickable {
-        id: page_scrollview
+        id: page_view
 
         clip: true
         anchors.fill: parent
@@ -45,16 +45,16 @@ Rectangle {
         }
     }
 
-    TextFile {
-        id: pagefile
+//    TextFile {
+//        id: pagefile
 
-        onErrorChanged: {
-            if (error) {
-                let msg = error_msg(errnum);
-                log.addMessage("(E) Error reading page file '" + path + "': " + msg);
-            }
-        }
-    }
+//        onErrorChanged: {
+//            if (error) {
+//                let msg = error_msg(errnum);
+//                log.addMessage("(E) Error reading page file '" + path + "': " + msg);
+//            }
+//        }
+//    }
 
     Connections {
         target: status_banner
@@ -62,14 +62,16 @@ Rectangle {
             if (status_banner.status_page_name) {
                 // create a page for the status banner to display
                 if (banner_page) banner_page.destroy();
-                let file_path = Putiljs.page_path_from_name(status_banner.status_page_name);
+                let file_path = Pathjs.page_subpath_from_name(status_banner.status_page_name);
                 let page_entry = {"file": file_path, "date": null, "page": null};
-                PageCreator.createPageFromQml(page_entry, "", pagefile, status_banner.status_page_parent);
+                PageCreator.createPageFromQml(page_entry, "", /*pagefile,*/ status_banner.status_page_parent);
                 banner_page = page_entry.page;
                 status_banner.status_page = banner_page;
             } else {
-                banner_page.destroy();
-                banner_page = null;
+                if (banner_page) {
+                    banner_page.destroy();
+                    banner_page = null;
+                }
                 status_banner.status_page = null;
             }
         }
@@ -94,11 +96,11 @@ Rectangle {
                 }
 
                 let prior_page = displayed_page? pages[displayed_page].page : null;
-                if (page_entry.file.startsWith("qrc:")) {
-                    PageCreator.createPageObject(page_entry, prior_page);
-                } else {
-                    PageCreator.createPageFromQml(page_entry, prior_page, pagefile);
-                }
+//                if (page_entry.file.startsWith("qrc:")) {
+//                    PageCreator.createPageObject(page_entry, prior_page);
+//                } else {
+                    PageCreator.createPageFromQml(page_entry, prior_page/*, pagefile*/);
+//                }
                 current_page = page_entry.page;
             } else {
                 // show the existing page

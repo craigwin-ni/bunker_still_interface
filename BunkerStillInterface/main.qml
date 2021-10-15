@@ -16,7 +16,7 @@ Window {
     title: qsTr("Bunker Distillation Systems")
 
     Component.onCompleted: {
-//        console.log("Writable directory count (should be 3): "+writable_dir_count);
+        log.addMessage("Operating system: " + operating_system);  // operating system set in main.cpp
         file_setup_timer.running = true;
     }
 
@@ -43,6 +43,7 @@ Window {
         }
     }
 
+//    SystemInfo {id: sysinfo}
     BpoFileUtil {id: fileUtil}
     BpoConnectionModel {id: connectionModel}
     BpoMqttClient {id: mqtt}

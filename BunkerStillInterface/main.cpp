@@ -9,11 +9,14 @@
 
 #include <QDir>
 #include <QStandardPaths>
+#include <QSysInfo>
 
 int check_dirs();
 
 int main(int argc, char *argv[])
 {
+    qputenv("QML_XHR_ALLOW_FILE_READ", QByteArray("1"));
+
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
@@ -38,6 +41,9 @@ int main(int argc, char *argv[])
     engine.addImportPath(":/imports");
 
     engine.rootContext()->setContextProperty(QStringLiteral("writable_dir_count"), check_dirs());
+    QString writablePath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
+    engine.rootContext()->setContextProperty(QStringLiteral("writable_path"), writablePath);
+    engine.rootContext()->setContextProperty(QStringLiteral("operating_system"), QSysInfo::productType());
 
     engine.load(url);
 
@@ -65,8 +71,12 @@ int check_dirs()
     else qDebug() << "'pages' directory could not be created.";
 
     if (!writableDir.exists("page_units")) writableDir.mkpath("page_units");
-    if (writableDir.exists("pages")) ++retval;
+    if (writableDir.exists("page_units")) ++retval;
     else qDebug() << "'page_units' directory could not be created.";
+
+    if (!writableDir.exists("annotations")) writableDir.mkpath("annotations");
+    if (writableDir.exists("annotations")) ++retval;
+    else qDebug() << "'annotations' directory could not be created.";
 
     return retval;
 }

@@ -33,20 +33,17 @@ Item {
 
 //    FontMetrics {
 //        id: data_font_metrics
-//        font.family: "HP_Simplified"
-//        font.pointSize: 11
+//        font: data_font
 //    }
 
 //    FontMetrics {
 //        id: label_font_metrics
-//        font.family: "Veranda"
-//        font.pointSize: 11
+//        font: label_font
 //    }
 
 //    FontMetrics {
 //        id: title_font_metrics
-//        font.family: "Veranda"
-//        font.pointSize: 14
+//        font: title_font
 //    }
 }
 

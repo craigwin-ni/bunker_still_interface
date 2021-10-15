@@ -1,12 +1,12 @@
 import QtQuick 2.15
 import Qt.labs.platform 1.1
+import "../javascript/path_util.js" as Pathjs
 import "../javascript/name_util.js" as Nutiljs
-import "../javascript/page_util.js" as Putiljs
 
 ListModel {
     id: connectionModel
 
-    property string connectionFile: Putiljs.connections_file_path
+    property string connectionFile: Pathjs.connections_file_subpath
 
     signal connectionsChanged(string name)
 
@@ -65,6 +65,14 @@ ListModel {
             log.addMessage("(E) Connection file:" + jsonIo.jsonErrorMsg);
             return;
         }
+
+//        let connections_text = fileUtil.get_readonly_file(Pathjs.connections_file_name);
+//        if (fileUtil.fileError) {
+//            log.addMessage("(E) Connection file:" + fileUtil.fileErrorMsg);
+//            return;
+//        }
+//        console.log("ConnectionModel.loadConnections: json text = " + connections_text);
+//        let connections = JSON.parse(connections_text);
 
         connectionModel.clear();
         for (let name of Object.keys(connections)) {

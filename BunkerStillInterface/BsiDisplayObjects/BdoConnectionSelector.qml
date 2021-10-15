@@ -12,6 +12,7 @@ RowLayout{
     ComboBox {
         id: connectionSelector
 
+        property string requested_still: ""
         property string connected_still: ""
 
         implicitHeight: 26
@@ -38,16 +39,19 @@ RowLayout{
                 let index = connectionSelector.currentIndex;
 
                 let new_names = connectionModel.connectionNames();
-                var new_index;
+                var new_index = new_names.indexOf(name) +1;
+
+                console.log("ConnectionSelector: old index="+index+" new_index="+new_index
+                            +" name="+name+" changed_name="+changed_name );
 
                 if (index === 0) {
                     // if we weren't connected, we're still not connnected, but with new names
                     connectionSelector.model = ["Connect"].concat(new_names);
                 } else {
                     // if we were connected, see if name is in list
-                    new_index = new_names.findIndex((element) => element === name);
-                    new_index += 1;
-                    log.addMessage("old index="+index+" new_index="+new_index+" name="+name+" changed_name="+changed_name );
+//                    new_index = new_names.findIndex((element) => element === name);
+//                    new_index = new_names.indexOf(name);
+//                    new_index += 1;
                     if (new_index) {
                         // We were connnected and connection is still available
                         if (!changed_name || changed_name === name) {
@@ -60,11 +64,17 @@ RowLayout{
                         mqtt.disconnect();
                         log.addMessage("Disconnect from " + connectionSelector.currentText);
                         connectionSelector.model = ["Connect"].concat(new_names);
+                        index = 0;
                     }
-                    connectionSelector.currentIndex = new_index;
-                    connected_still = index === 0? "" : connectionModel.connectionNames()[index-1];
+//                    connectionSelector.currentIndex = new_index;
+                    connected_still = index === 0? "" : name; //connectionModel.connectionNames()[index-1];
                 }
             }
+        }
+
+        onConnected_stillChanged: {
+            let index = Math.max(0, model.indexOf(connected_still));
+            currentIndex = model.indexOf(connected_still);
         }
 
         onActivated: {
@@ -76,14 +86,18 @@ RowLayout{
             if (index == 0) {
                 // We selected to Disconnect; prepare selecter with connect opeion
                 model = ["Connect"].concat(connectionModel.connectionNames());
+                connected_still = "";
             } else {
                 // Selected a connection; prepare selector with disconnect option
                 mqtt.connect(connectionModel.get(index-1))
                 log.addMessage("Connect to " + connectionModel.get(index-1).name);
                 model = ["Disconnect"].concat(connectionModel.connectionNames());
+                requested_still = connectionModel.connectionNames()[index-1];
             }
-            currentIndex = index;  // changing model resets index to 0
-            connected_still = index === 0? "" : connectionModel.connectionNames()[index-1];
+//            currentIndex = index;  // changing model resets index to 0
+//            if (index == 0) selected_still = "";
+//            else requested_still =
+//            requested_still = index === 0? "" : connectionModel.connectionNames()[index-1];
         }
     }
 
@@ -96,6 +110,7 @@ RowLayout{
             target: mqtt
             function onConnectedChanged(connected) {
                 connectionLed.enable = mqtt.connected
+                connectionSelector.connected_still = connectionSelector.requested_still;
             }
         }
     }

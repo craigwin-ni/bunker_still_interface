@@ -1,9 +1,9 @@
 import QtQuick 2.15
-import Qt.labs.folderlistmodel 2.15
+//import Qt.labs.folderlistmodel 2.15
 import Qt.labs.platform 1.1
 import "../BsiBaseUnits"
 import "../BsiProcessObjects"
-import "../javascript/page_util.js" as Putiljs
+import "../javascript/path_util.js" as Pathjs
 import "../javascript/page_editor.js" as Peditjs
 
 ListModel {
@@ -16,68 +16,99 @@ ListModel {
     property var jsonIo: BpoJsonIo {id: jsonIo}
     property var bu_index: BbuIndex {id: bu_index}
 
-    property var pu_folder: FolderListModel {
-        id: pu_folder
-
-        folder: Peditjs.page_unit_baseurl
-        showDirs: false
-        showOnlyReadable: true
-        sortField: FolderListModel.Name
-        nameFilters: [Peditjs.page_unit_file_from_name("*")]
-        caseSensitive: false
-
-        signal puModelUpdated()
-
-        onStatusChanged: {
-            pu_list = [];
-            page_units = {};
-            clear();
-            if (status === FolderListModel.Ready) {
-                for (let i_pu=0; i_pu<pu_folder.count; i_pu++) {
-                    let pu_name = Peditjs.page_unit_name_from_file(pu_folder.get(i_pu, "fileName"));
-                    let page_unit = jsonIo.loadJson(Peditjs.page_unit_path_from_name(pu_name));
-                    if (jsonIo.jsonError) {
-                        log.addMessage("(E) PageUnit '" + pu_name + "': " + jsonIo.jsonErrorMsg);
-                        continue;
-                    }
-                    page_units[pu_name] = JSON.parse(JSON.stringify(page_unit));
-                    pu_list.push(pu_name);
-                    append({"name": pu_name, "page_unit": page_unit});
-                }
-            }
-            puModelUpdated()
-        }
+    Component.onCompleted: {
+        update_page_list();
+        update_page_unit_list();
     }
 
-    property var page_folder: FolderListModel {
-        id: page_folder
+//    property var pu_folder: FolderListModel {
+//        id: pu_folder
 
-        folder: Putiljs.page_baseurl
-        showDirs: false
-        showOnlyReadable: true
-        sortField: FolderListModel.Name
-        nameFilters: ["NoFilesMatchThis"]
-        caseSensitive: false
+//        folder: Pathjs.page_unit_baseurl
+//        showDirs: false
+//        showOnlyReadable: true
+//        sortField: FolderListModel.Name
+//        nameFilters: [Pathjs.page_unit_file_from_name("*")]
+//        caseSensitive: false
 
-        property var connections: Connections {
-            target: status_banner
-            function onConnected_stillChanged() {
-                if (status_banner.connected_still) {
-                    page_folder.nameFilters = [Putiljs.page_file_from_name("*")];
-                }
-            }
-        }
+//        signal puModelUpdated()
 
-        onStatusChanged: {
-            page_list = [];
-            if (status === FolderListModel.Ready) {
-                if (status_banner.connected_still) {
-                    for (let i_page=0; i_page<page_folder.count; i_page++) {
-                        page_list.push(Peditjs.page_unit_name_from_file(page_folder.get(i_page, "fileName")));
-                    }
-                }
-            }
-        }
+//        onStatusChanged: {
+//            pu_list = [];
+//            page_units = {};
+//            clear();
+//            if (status === FolderListModel.Ready) {
+//                for (let i_pu=0; i_pu<pu_folder.count; i_pu++) {
+//                    let pu_name = Pathjs.page_unit_name_from_file(pu_folder.get(i_pu, "fileName"));
+//                    let page_unit = jsonIo.loadJson(Pathjs.page_unit_subpath_from_name(pu_name));
+//                    if (jsonIo.jsonError) {
+//                        log.addMessage("(E) PageUnit '" + pu_name + "': " + jsonIo.jsonErrorMsg);
+//                        continue;
+//                    }
+//                    page_units[pu_name] = JSON.parse(JSON.stringify(page_unit));
+//                    pu_list.push(pu_name);
+//                    append({"name": pu_name, "page_unit": page_unit});
+//                }
+//            }
+//            puModelUpdated()
+//        }
+//    }
+
+//    property var page_folder: FolderListModel {
+//        id: page_folder
+
+//        folder: Pathjs.page_baseurl
+//        showDirs: false
+//        showOnlyReadable: true
+//        sortField: FolderListModel.Name
+//        nameFilters: ["NoFilesMatchThis"]
+//        caseSensitive: false
+
+//        property var connections: Connections {
+//            target: status_banner
+//            function onConnected_stillChanged() {
+//                if (status_banner.connected_still) {
+//                    page_folder.nameFilters = [Pathjs.page_file_from_name("*")];
+//                }
+//            }
+//        }
+
+//        onStatusChanged: {
+//            page_list = [];
+//            if (status === FolderListModel.Ready) {
+//                if (status_banner.connected_still) {
+//                    for (let i_page=0; i_page<page_folder.count; i_page++) {
+//                        page_list.push(Pathjs.page_unit_name_from_file(page_folder.get(i_page, "fileName")));
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+    function update_page_list() {
+        fileUtil.get_dualfile_list(Pathjs.page_basesubpath,
+                                   Pathjs.page_file_from_name("*"),
+                                   function(list) {
+                                       page_list = list.map(file => Pathjs.page_name_from_file(file));
+                                   });
+    }
+
+    function update_page_unit_list() {
+        clear();
+        fileUtil.get_dualfile_list(Pathjs.page_unit_basesubpath,
+                                   Pathjs.page_unit_file_from_name("*"),
+                                   function(list) {
+                                       pu_list = list.map(file => Pathjs.page_unit_name_from_file(file));
+                                       for (var pu_name of pu_list) {
+                                           let page_unit = jsonIo.loadJson(Pathjs.page_unit_subpath_from_name(pu_name));
+                                           if (jsonIo.jsonError) {
+                                               log.addMessage("(E) PageUnit '" + pu_name + "': " + jsonIo.jsonErrorMsg);
+                                               continue;
+                                           }
+                                           page_units[pu_name] = JSON.parse(JSON.stringify(page_unit));
+                                           append({"name": pu_name, "page_unit": page_unit});
+                                       }
+                                   });
     }
 
     // this function is called by BdoListNameAdder
@@ -87,10 +118,10 @@ ListModel {
         let page_unit_name = page_unit.name
         if (Object.keys(base_units).indexOf(page_unit_name) >= 0
                 || Object.keys(page_units).indexOf(page_unit_name) >= 0) {
-            log.addMessage("PageUnitModel.addElement: reject duplicate name '" + page_unit_name + "'");
+            log.addMessage("(W) PageUnitModel.addElement: reject duplicate name '" + page_unit_name + "'");
             return;
         }
-        jsonIo.storeJson(Peditjs.page_unit_path_from_name(page_unit_name), page_unit);
+        jsonIo.storeJson(Pathjs.page_unit_subpath_from_name(page_unit_name), page_unit);
         if (jsonIo.jsonError) {
             log.addMessage("(E) PageUnit '" + page_unit_name + "': " + pu.error);
             return
@@ -106,20 +137,21 @@ ListModel {
         let page_unit_string = JSON.stringify(new_page_unit);
         let new_pu = {"name": pu_name, "page_unit": JSON.parse(page_unit_string)};
         page_units[pu_name] = JSON.parse(page_unit_string);
-        jsonIo.storeJson(Peditjs.page_unit_path_from_name(pu_name), new_page_unit);
+        jsonIo.storeJson(Pathjs.page_unit_subpath_from_name(pu_name), new_page_unit);
         if (jsonIo.jsonError) {
             new_pu.error = jsonIo.Error;
             log.addMessage("(C) PageUnit '" + page_unit_name + "': " + new_pu.error);
         }
-        for(let i_pu=0; i_pu<count; i_pu++) {
-            let pu = get(i_pu);
-            if (pu.name === pu_name) {
-                set(i_pu, new_pu);
-                return;
-            }
-        }
-        pu_list.push(pu_name);
-        append(new_pu);
+        // This code is obsolete because write triggers update_page_unit_list()
+//        for(let i_pu=0; i_pu<count; i_pu++) {
+//            let pu = get(i_pu);
+//            if (pu.name === pu_name) {
+//                set(i_pu, new_pu);
+//                return;
+//            }
+//        }
+//        pu_list.push(pu_name);
+//        append(new_pu);
         return;
     }
 
@@ -148,7 +180,7 @@ ListModel {
     }
 
     function remove_page_unit(page_unit_name) {
-        jsonIo.removeJson(Peditjs.page_unit_path_from_name(page_unit_name));
+        jsonIo.removeJson(Pathjs.page_unit_subpath_from_name(page_unit_name));
         // this may trigger reload via change to the page unit folder.
         log.addMessage("pageUnitModel: Deleted Page Unit " + page_unit_name)
     }

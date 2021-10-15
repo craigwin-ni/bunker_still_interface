@@ -1,0 +1,34 @@
+{
+  "name": "_GaugeBasic",
+  "description": "Base unit instance",
+  "base_unit_name": "GaugeBasic",
+  "datas": [
+    [
+      "<data>",
+      "<data>",
+      "<sump_temp>"
+    ]
+  ],
+  "props": [
+    [
+      "<autoscale>",
+      "<autoscale>",
+      "true/false"
+    ],
+    [
+      "<center_scale>",
+      "<center_scale>",
+      "60"
+    ],
+    [
+      "<meter_size>",
+      "<meter_size>",
+      "120"
+    ],
+    [
+      "<min_range>",
+      "<min_range>",
+      "5"
+    ]
+  ]
+}

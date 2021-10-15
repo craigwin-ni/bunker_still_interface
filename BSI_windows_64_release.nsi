@@ -14,10 +14,10 @@ Page instfiles
 Section
 
 SetOutPath $INSTDIR\${APPVERSION}
-File /r C:\Users\Craig\Dev-Qt\BSI\build-BunkerStillInterface-Desktop_Qt_5_15_2_MSVC2019_64bit-Release\release\${APPVERSION}\*
+File /r C:\Users\Craig\Dev-Qt\BSI\build-BSI-Desktop_Qt_5_15_2_MSVC2019_64bit-Release\release\${APPVERSION}\*
 
-SetOutPath $APPDATA\${APPNAME}
-File /r .\writable_files\*
+#SetOutPath $APPDATA\${APPNAME}
+#File /r .\writable_files\*
 
 CreateShortcut "$DESKTOP\${APPABBREV}.lnk \
   "$INSTDIR\${APPVERSION}\${APPNAME}.exe"

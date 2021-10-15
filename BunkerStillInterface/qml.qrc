@@ -26,7 +26,6 @@
         <file>BsiDisplayObjects/BdoPageUnitDelegate.qml</file>
         <file>BsiDisplayObjects/BdoConnectionDelegate.qml</file>
         <file>javascript/page_editor.js</file>
-        <file>javascript/page_util.js</file>
         <file>imports/Bunker/Globals.qml</file>
         <file>imports/Bunker/qmldir</file>
         <file>BsiBaseUnits/Bbu_DataAsText.qml</file>
@@ -63,5 +62,6 @@
         <file>images/Still-5_index.png</file>
         <file>BsiBaseUnits/Bbu_ImagePage.qml</file>
         <file>BsiDisplayObjects/BdoTextAnnotation.qml</file>
+        <file>javascript/path_util.js</file>
     </qresource>
 </RCC>

@@ -19,6 +19,16 @@ ColumnLayout {
         BdoPageUnitDelegate {}
     }
 
+    Connections {
+        target: fileUtil
+        function onPagesUpdated() {
+            pageUnitModel.update_page_list();
+        }
+        function onPageUnitsUpdated() {
+            pageUnitModel.update_page_unit_list();
+        }
+    }
+
     ListView {
         id: pageListView
 

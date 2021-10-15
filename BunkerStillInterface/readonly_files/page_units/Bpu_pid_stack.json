@@ -1,0 +1,121 @@
+{
+  "name": "pid_stack",
+  "description": "Column of pids",
+  "base_unit_name": "Column",
+  "datas": [],
+  "props": [
+    [
+      "<column_padding>",
+      "2",
+      "2"
+    ],
+    [
+      "<column_spacing>",
+      "4",
+      "4"
+    ]
+  ],
+  "childs": [
+    {
+      "unit_name": "_PidGauge",
+      "datas": [
+        [
+          "<pid_enable>",
+          "<pid_enable1>",
+          "<some_pid_enable>"
+        ]
+      ],
+      "props": [
+        [
+          "<meter_size>",
+          "<meter_size>",
+          "150"
+        ]
+      ]
+    },
+    {
+      "unit_name": "_PidGauge",
+      "datas": [
+        [
+          "<pid_enable>",
+          "<pid_enable2>",
+          "<some_pid_enable>"
+        ]
+      ],
+      "props": [
+        [
+          "<meter_size>",
+          "<meter_size>",
+          "150"
+        ]
+      ]
+    },
+    {
+      "unit_name": "_PidGauge",
+      "datas": [
+        [
+          "<pid_enable>",
+          "<pid_enable3>",
+          "<some_pid_enable>"
+        ]
+      ],
+      "props": [
+        [
+          "<meter_size>",
+          "<meter_size>",
+          "150"
+        ]
+      ]
+    },
+    {
+      "unit_name": "_PidGauge",
+      "datas": [
+        [
+          "<pid_enable>",
+          "<pid_enable4>",
+          "<some_pid_enable>"
+        ]
+      ],
+      "props": [
+        [
+          "<meter_size>",
+          "<meter_size>",
+          "150"
+        ]
+      ]
+    }
+  ],
+  "resolutions": {
+    "Still-5": {
+      "datas": [
+        [
+          "<pid_enable1>",
+          "main_heater_pid_enable",
+          "<some_pid_enable>"
+        ],
+        [
+          "<pid_enable2>",
+          "lower_draw_pid_enable",
+          "<some_pid_enable>"
+        ],
+        [
+          "<pid_enable3>",
+          "middle_draw_pid_enable",
+          "<some_pid_enable>"
+        ],
+        [
+          "<pid_enable4>",
+          "upper_draw_pid_enable",
+          "<some_pid_enable>"
+        ]
+      ],
+      "props": [
+        [
+          "<meter_size>",
+          "150",
+          "150"
+        ]
+      ]
+    }
+  }
+}

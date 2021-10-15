@@ -109,11 +109,7 @@ BbuPidBase {
                 border.width: 2
                 MouseArea {
                     anchors.fill:parent
-                    onClicked: {
-                        show_data = !show_data;
-//                        text_column1.visible = !text_column1.visible;
-//                        text_column2.visible = !text_column2.visible;
-                    }
+                    onClicked: {show_data = !show_data;}
                 }
 
                 Text {

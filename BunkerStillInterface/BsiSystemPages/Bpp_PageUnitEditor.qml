@@ -279,7 +279,7 @@ ColumnLayout {
         BdoButton_Text {
             text: "Save"
             onClicked: {
-                console.log("PU_Edit Save");
+                console.log("PU_Edit Save " + edit_unit.name);
 //                console.log(".. saving page_unit:\n"+JSON.stringify(edit_unit, 0, 2));
                 page_unit_model.put_page_unit(edit_unit);
                 exit_editor();
@@ -288,7 +288,6 @@ ColumnLayout {
         BdoButton_Text {
             text: "Save As"
             onClicked: {
-                console.log("PU_Edit Save As");
                 save_as_name_field.input_text = edit_unit.name;
                 button_row.visible = false;
                 save_as_row.visible = true;
@@ -317,6 +316,7 @@ ColumnLayout {
             onInput_ready: {
                 if (!visible) return;
                 let name = input_text.trim();
+                console.log("PU_Edit Save As: " + edit_unit.name + " as " + name);
                 console.log("PageUnitEditor.SaveAs: save page_unit '" + edit_unit.name
                             + "' as '"+name+"'");
                 if (name) {
